@@ -1,0 +1,343 @@
+ConvertModel(
+  (Conv_684): Conv2d(4, 48, kernel_size=(1, 1), stride=(1, 1))
+  (Relu_447): ReLU(inplace=True)
+  (Transpose_448): Transpose()
+
+--------------------------------------------------
+Stage 1 TDF_Block
+--------------------------------------------------
+
+  -- TDF_Block s1
+
+  (Conv_687): Conv2d(48, 48, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_451): ReLU(inplace=True)
+  (Conv_690): Conv2d(48, 48, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_454): ReLU(inplace=True)
+  (Conv_693): Conv2d(48, 48, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_457): ReLU(inplace=True)
+  (MatMul_459): Linear(in_features=3072, out_features=384, bias=False)
+  (BatchNormalization_460): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(48, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_461): ReLU(inplace=True)
+  (MatMul_463): Linear(in_features=384, out_features=3072, bias=False)
+  (BatchNormalization_464): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(48, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_465): ReLU(inplace=True)
+  (Add_466): Add()
+
+  --- Down for s1 (d1)
+
+  (Conv_696): Conv2d(48, 96, kernel_size=(2, 2), stride=(2, 2))
+  (Relu_469): ReLU(inplace=True)
+
+--------------------------------------------------
+Stage 2
+--------------------------------------------------
+
+  -- TDF_Block s2
+
+  (Conv_699): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_472): ReLU(inplace=True)
+  (Conv_702): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_475): ReLU(inplace=True)
+  (Conv_705): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_478): ReLU(inplace=True)
+  (MatMul_480): Linear(in_features=1536, out_features=192, bias=False)
+  (BatchNormalization_481): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(96, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_482): ReLU(inplace=True)
+  (MatMul_484): Linear(in_features=192, out_features=1536, bias=False)
+  (BatchNormalization_485): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(96, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_486): ReLU(inplace=True)
+  (Add_487): Add()
+
+  --- Down for s2 (d2)
+
+  (Conv_708): Conv2d(96, 144, kernel_size=(2, 2), stride=(2, 2))
+  (Relu_490): ReLU(inplace=True)
+
+--------------------------------------------------
+Stage 3
+--------------------------------------------------
+
+  -- TDF_Block s3
+
+  (Conv_711): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_493): ReLU(inplace=True)
+  (Conv_714): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_496): ReLU(inplace=True)
+  (Conv_717): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_499): ReLU(inplace=True)
+  (MatMul_501): Linear(in_features=768, out_features=96, bias=False)
+  (BatchNormalization_502): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(144, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_503): ReLU(inplace=True)
+  (MatMul_505): Linear(in_features=96, out_features=768, bias=False)
+  (BatchNormalization_506): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(144, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_507): ReLU(inplace=True)
+  (Add_508): Add()
+
+  --- Down for s3 (d3)
+
+  (Conv_720): Conv2d(144, 192, kernel_size=(2, 2), stride=(2, 2))
+  (Relu_511): ReLU(inplace=True)
+
+--------------------------------------------------
+Stage 4
+--------------------------------------------------
+
+  -- TDF_Block s4
+
+  (Conv_723): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_514): ReLU(inplace=True)
+  (Conv_726): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_517): ReLU(inplace=True)
+  (Conv_729): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_520): ReLU(inplace=True)
+  (MatMul_522): Linear(in_features=384, out_features=48, bias=False)
+  (BatchNormalization_523): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(192, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_524): ReLU(inplace=True)
+  (MatMul_526): Linear(in_features=48, out_features=384, bias=False)
+  (BatchNormalization_527): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(192, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_528): ReLU(inplace=True)
+  (Add_529): Add()
+
+  --- Down for s4 (d4)
+
+  (Conv_732): Conv2d(192, 240, kernel_size=(2, 2), stride=(2, 2))
+  (Relu_532): ReLU(inplace=True)
+
+--------------------------------------------------
+Stage 5
+--------------------------------------------------
+
+  -- TDF_Block s5
+
+  (Conv_735): Conv2d(240, 240, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_535): ReLU(inplace=True)
+  (Conv_738): Conv2d(240, 240, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_538): ReLU(inplace=True)
+  (Conv_741): Conv2d(240, 240, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_541): ReLU(inplace=True)
+  (MatMul_543): Linear(in_features=192, out_features=24, bias=False)
+  (BatchNormalization_544): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(240, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_545): ReLU(inplace=True)
+  (MatMul_547): Linear(in_features=24, out_features=192, bias=False)
+  (BatchNormalization_548): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(240, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_549): ReLU(inplace=True)
+  (Add_550): Add()
+
+  --- Down for s5 (d5)
+
+  (Conv_744): Conv2d(240, 288, kernel_size=(2, 2), stride=(2, 2))
+  (Relu_553): ReLU(inplace=True)
+
+--------------------------------------------------
+Bottleneck
+--------------------------------------------------
+
+  (Conv_747): Conv2d(288, 288, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_556): ReLU(inplace=True)
+  (Conv_750): Conv2d(288, 288, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_559): ReLU(inplace=True)
+  (Conv_753): Conv2d(288, 288, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_562): ReLU(inplace=True)
+  (MatMul_564): Linear(in_features=96, out_features=12, bias=False)
+  (BatchNormalization_565): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(288, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_566): ReLU(inplace=True)
+  (MatMul_568): Linear(in_features=12, out_features=96, bias=False)
+  (BatchNormalization_569): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(288, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_570): ReLU(inplace=True)
+  (Add_571): Add()
+
+--------------------------------------------------
+Stage 5
+--------------------------------------------------
+
+  -- Up 5
+
+  (ConvTranspose_572): ConvTranspose2d(288, 240, kernel_size=(2, 2), stride=(2, 2))
+  (BatchNormalization_573): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(240, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_574): ReLU(inplace=True)
+  (Mul_575): mul()
+
+  -- TDF_Block 5
+
+  (Conv_756): Conv2d(240, 240, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_578): ReLU(inplace=True)
+  (Conv_759): Conv2d(240, 240, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_581): ReLU(inplace=True)
+  (Conv_762): Conv2d(240, 240, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_584): ReLU(inplace=True)
+  (MatMul_586): Linear(in_features=192, out_features=24, bias=False)
+  (BatchNormalization_587): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(240, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_588): ReLU(inplace=True)
+  (MatMul_590): Linear(in_features=24, out_features=192, bias=False)
+  (BatchNormalization_591): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(240, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_592): ReLU(inplace=True)
+  (Add_593): Add()
+
+--------------------------------------------------
+Stage 4
+--------------------------------------------------
+
+  -- Up 4
+
+  (ConvTranspose_594): ConvTranspose2d(240, 192, kernel_size=(2, 2), stride=(2, 2))
+  (BatchNormalization_595): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(192, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_596): ReLU(inplace=True)
+  (Mul_597): mul()
+
+  -- TDF_Block 4
+
+  (Conv_765): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_600): ReLU(inplace=True)
+  (Conv_768): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_603): ReLU(inplace=True)
+  (Conv_771): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_606): ReLU(inplace=True)
+  (MatMul_608): Linear(in_features=384, out_features=48, bias=False)
+  (BatchNormalization_609): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(192, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_610): ReLU(inplace=True)
+  (MatMul_612): Linear(in_features=48, out_features=384, bias=False)
+  (BatchNormalization_613): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(192, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_614): ReLU(inplace=True)
+  (Add_615): Add()
+
+--------------------------------------------------
+Stage 3
+--------------------------------------------------
+
+  -- Up 3
+
+  (ConvTranspose_616): ConvTranspose2d(192, 144, kernel_size=(2, 2), stride=(2, 2))
+  (BatchNormalization_617): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(144, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_618): ReLU(inplace=True)
+  (Mul_619): mul()
+
+  -- TDF_Block 3
+
+  (Conv_774): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_622): ReLU(inplace=True)
+  (Conv_777): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_625): ReLU(inplace=True)
+  (Conv_780): Conv2d(144, 144, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_628): ReLU(inplace=True)
+  (MatMul_630): Linear(in_features=768, out_features=96, bias=False)
+  (BatchNormalization_631): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(144, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_632): ReLU(inplace=True)
+  (MatMul_634): Linear(in_features=96, out_features=768, bias=False)
+  (BatchNormalization_635): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(144, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_636): ReLU(inplace=True)
+  (Add_637): Add()
+
+--------------------------------------------------
+Stage 2
+--------------------------------------------------
+
+  -- Up 2
+
+  (ConvTranspose_638): ConvTranspose2d(144, 96, kernel_size=(2, 2), stride=(2, 2))
+  (BatchNormalization_639): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(96, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_640): ReLU(inplace=True)
+  (Mul_641): mul()
+
+  -- TDF_Block 2
+
+  (Conv_783): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_644): ReLU(inplace=True)
+  (Conv_786): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_647): ReLU(inplace=True)
+  (Conv_789): Conv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_650): ReLU(inplace=True)
+  (MatMul_652): Linear(in_features=1536, out_features=192, bias=False)
+  (BatchNormalization_653): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(96, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_654): ReLU(inplace=True)
+  (MatMul_656): Linear(in_features=192, out_features=1536, bias=False)
+  (BatchNormalization_657): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(96, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_658): ReLU(inplace=True)
+  (Add_659): Add()
+
+--------------------------------------------------
+Stage 1
+--------------------------------------------------
+
+  -- Up 1
+
+  (ConvTranspose_660): ConvTranspose2d(96, 48, kernel_size=(2, 2), stride=(2, 2))
+  (BatchNormalization_661): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(48, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_662): ReLU(inplace=True)
+  (Mul_663): mul()
+  (Conv_792): Conv2d(48, 48, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_666): ReLU(inplace=True)
+  (Conv_795): Conv2d(48, 48, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_669): ReLU(inplace=True)
+  (Conv_798): Conv2d(48, 48, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (Relu_672): ReLU(inplace=True)
+  (MatMul_674): Linear(in_features=3072, out_features=384, bias=False)
+  (BatchNormalization_675): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(48, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_676): ReLU(inplace=True)
+  (MatMul_678): Linear(in_features=384, out_features=3072, bias=False)
+  (BatchNormalization_679): BatchNormWrapper(
+    (bnu): BatchNormUnsafe(48, eps=9.999999747378752e-06, momentum=0.8999999761581421, affine=True, track_running_stats=True)
+  )
+  (Relu_680): ReLU(inplace=True)
+  (Add_681): Add()
+
+  -- TDF_Block 2
+
+--------------------------------------------------
+Final
+--------------------------------------------------
+
+  (Transpose_682): Transpose()
+  (Conv_output): Conv2d(48, 4, kernel_size=(1, 1), stride=(1, 1))
+)
