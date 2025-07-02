@@ -1,0 +1,13 @@
+[project]
+name = "audio-separation"
+description = "Audio separation (aka demixing) nodes, for Vocals, Instruments, Bass, Drums and Others. Using MDX-Net, no extra dependencies, support for batch and resample."
+version = "1.0.0"
+license = { file = "LICENSE" }
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/set-soft/AudioSeparation"
+
+[tool.comfy]
+PublisherId = "set-soft"
+DisplayName = "Audio Separation (Demix)"
