@@ -1,0 +1,8 @@
+torch
+torchaudio
+numpy
+tqdm
+# Optionals:
+# requests
+# colorama
+# onnxruntime
