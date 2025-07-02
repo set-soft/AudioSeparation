@@ -61,7 +61,7 @@ def hash_dir(directory_path: str) -> dict:
                     cached_data[filename] = (file_hash, float(timestamp))
             logger.debug(f"Successfully loaded {len(cached_data)} entries from cache: {catalog_path}")
     except FileNotFoundError:
-        logger.debug(f"Cache file '{catalog_path}' not found. A new one will be created.")
+        logger.debug(f"Cache file '{catalog_path}' not found.")
     except Exception as e:
         logger.warning(f"Could not read cache file '{catalog_path}'. Proceeding without cache. Error: {e}")
 
