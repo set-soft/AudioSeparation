@@ -175,7 +175,7 @@ def get_models_full(primary_stem=None, model_t=None, file_t=None, json_path=None
         filtered_name = create_display_name(d, hash, desc, primary_stem, model_t, file_t, downloaded)
         d['hash'] = hash
         d['filtered_name'] = filtered_name
-        if downloaded:
+        if downloaded is not None:
             file_name = downloaded.get(hash)
             d['indicator'] = ICON_DOWNLOADED if file_name is not None else ICON_REMOTE
         else:
