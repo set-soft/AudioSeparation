@@ -1,0 +1,14 @@
+#Ignore Python cache and virtual environment directories
+__pycache__/
+*.onnx
+*.safetensors
+*.pth
+test/
+*.epr
+.*.dst
+.*~
+*.mp3
+models/all_public_uvr_models
+__no__
+models/.catalog.csv
+0LEEME
