@@ -16,12 +16,12 @@ from the rest of the sounds.
 
 To achieve this we use [MDX Net](https://arxiv.org/abs/2111.12203) neural networks (models).
 **AudioSeparation** currently supports [39 models](https://huggingface.co/set-soft/audio_separation)
-from the [UVR5](https://github.com/Anjok07/ultimatevocalremovergui) project.
+collected by the [UVR5](https://github.com/Anjok07/ultimatevocalremovergui) project.
 
 The models are small (from 21 MB to 65 MB), but really efficient.
 Models specialized on different stems are provided.
 We support more than one model for each task because some times a model will perform better
-for a song and other worst.
+for a song and worst for others.
 
 We support two *karaoke* models. They are slightly different to regular models because they try
 to keep the secondary vocals along with the instruments.
@@ -31,7 +31,7 @@ The objectives for these nodes are:
 - Multiple stems (Vocals, Instruments, Drums, Bass, etc.)
 - Easy of use
 - Clear download (with progress and known destination)
-- Support for all possible input audio (mono/stereo, any sample rate, any batch size)
+- Support for all possible input audio formats (mono/stereo, any sample rate, any batch size)
 - Good quality vs size
 - Reduced dependencies
 
@@ -128,20 +128,20 @@ All of them are used by ComfyUI, so you don't need to install any additional dep
 
 The following are optional dependencies:
 
-- onnxruntime: if you want to use the ONNX version of the models you'll need the ONNX runtime, but I don't see any advantage. Note that only the command line can handle them.
-- requests: this is a robust internet connection module. If not installed we use the Python's `urllib` which is fine.
-- colorama: it helps to generate colored messages (for debug, warning and errors). If not installed we use the most common ANSI escape sequences, supported by most terminals. You might need it for Windows.
+- `onnxruntime`: if you want to use the ONNX version of the models you'll need the ONNX runtime, but I don't see any advantage. Note that only the command line can handle them.
+- `requests`: this is a robust internet connection module. If not installed we use the Python's `urllib` which is fine.
+- `colorama`: it helps to generate colored messages (for debug, warning and errors). If not installed we use the most common ANSI escape sequences, supported by most terminals. You might need it for Windows.
 
 
 ## &#x0001F5BC;&#xFE0F; Usage
 
 ### ComfyUI
 
-You can start using template workflows, ComfyUI *Workflow* menu and then choose *Browse Templates*,
-look for "Audio Separation"
+You can start using template workflows, go to the ComfyUI *Workflow* menu and then choose *Browse Templates*,
+look for *Audio Separation*
 
 If you want to do it manually you'll find the nodes in the *audio/separation* category.
-Or you can use the search for them double clicking and then typing **MDX**:
+Or you can use the search menu, double click in the canvas and then type **MDX**:
 
 ![ComfyUI Search](doc/node_search.png)
 
@@ -155,7 +155,7 @@ You'll get something like this:
 
 ![ComfyUI Search](doc/node_structure.png)
 
-Now choose a model in the MDX node. On a fresh install all models will have an arrow (⬇️ )
+Now choose a model in the MDX node. On a fresh install all models will have an arrow (⬇️)
 indicating it must be downloaded.
 
 Now just run the workflow. That's all.
@@ -192,7 +192,7 @@ share the same structure, so here is the first:
    - **Display Name:** `Vocals using MDX`
    - **Internal Name:** `AudioSeparateVocals`
    - **Category:** `audio/separation`
-   - **Description:** Takes one audio input (which can be batch) separates the vocals from the rest of the sounds.
+   - **Description:** Takes one audio input (which can be a batch) separates the vocals from the rest of the sounds.
    - **Inputs:**
      - `input_sound` (AUDIO): The audio input. Can be a single audio item or a batch.
      - `model` (COMBO): The name of the model to use. Choose one from the list.
