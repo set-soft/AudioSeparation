@@ -14,12 +14,14 @@ audio demixing, also known as audio separation.
 From an audio the objective is to separate the vocals, instruments, drums, bass, etc.
 from the rest of the sounds.
 
-To achieve this we use [MDX Net](https://arxiv.org/abs/2111.12203) neural networks (models).
-**AudioSeparation** currently supports [39 models](https://huggingface.co/set-soft/audio_separation)
-collected by the [UVR5](https://github.com/Anjok07/ultimatevocalremovergui) project.
+To achieve this we use [MDX Net](https://arxiv.org/abs/2111.12203) and
+[Demucs](https://github.com/facebookresearch/demucs) neural networks (models).
+**AudioSeparation** currently supports [46 models](https://huggingface.co/set-soft/audio_separation)
+mostly collected by the [UVR5](https://github.com/Anjok07/ultimatevocalremovergui) project.
 
-The models are small (from 21 MB to 65 MB), but really efficient.
-Models specialized on different stems are provided.
+The MDX models are small (from 21 MB to 65 MB), but really efficient, the Demucs models are bigger
+(from 84 MB to 870) MB, but slightly better, and supports 4 stems.
+MDX models specialized on different stems are provided.
 We support more than one model for each task because some times a model will perform better
 for a song and worst for others.
 
@@ -32,7 +34,7 @@ The objectives for these nodes are:
 - Easy of use
 - Clear download (with progress and known destination)
 - Support for all possible input audio formats (mono/stereo, any sample rate, any batch size)
-- Good quality vs size
+- Good quality vs size, or you can choose better quality using Demucs
 - Reduced dependencies
 
 ---
@@ -50,6 +52,7 @@ The objectives for these nodes are:
     *   [Command Line](#command-line)
 *   &#x2728; [Nodes](#-nodes)
     *   [Vocals using MDX](#vocals-using-mdx)
+    *   [Demucs Audio Separator](#demucs-audio-separator)
 *   &#x0001F4DD; [Usage Notes](#-usage-notes)
 *   &#x2696;&#xFE0F; [License](#&#xFE0F;-license)
 *   &#x0001F64F; [Attributions](#-attributions)
@@ -111,7 +114,7 @@ A list of all the available tools can be found [here](tool/README.md).
 
 Models are automatically downloaded.
 
-When using ComfyUI they are downloaded to `ComfyUI/models/audio/MDX`.
+When using ComfyUI they are downloaded to `ComfyUI/models/audio/MDX` and `ComfyUI/models/audio/Demucs`.
 
 When using the command line the default is `../models` relative to the script, but you can specify another dir.
 
@@ -123,7 +126,7 @@ For the command line you can also download the ONNX files from other repos.
 
 ## &#x0001F4E6; Dependencies
 
-These nodes just uses `torchaudio` (part of PyTorch), `numpy` for math and `tqdm` for progress bars.
+These nodes just uses `torchaudio` (part of PyTorch), `numpy` for math, `safetensors` to load models and `tqdm` for progress bars.
 All of them are used by ComfyUI, so you don't need to install any additional dependency on a ComfyUI setup.
 
 The following are optional dependencies:
@@ -141,13 +144,14 @@ You can start using template workflows, go to the ComfyUI *Workflow* menu and th
 look for *Audio Separation*
 
 If you want to do it manually you'll find the nodes in the *audio/separation* category.
-Or you can use the search menu, double click in the canvas and then type **MDX**:
+Or you can use the search menu, double click in the canvas and then type **MDX** (or **Demucs**):
 
 ![ComfyUI Search](doc/node_search.png)
 
 Choose a node to extract what you want, i.e. *Vocals*. The complement output for it will
 be the instruments, but using a node for *Instrumental* separation you'll usually get a better result
-than using the *Complement*  output.
+than using the *Complement* output. In the case of *Demucs* models you get 4 or 6 stems at a time,
+the "UVR Demucs" is an exception, it just supports Vocals and Other.
 
 Then simply connect your audio input to the node (i.e. **LoadAudio** node from Comfy core) and
 connect its output to some audio node (i.e. **PreviewAudio** or **SaveAudio** nodes from Comfy core).
@@ -207,6 +211,44 @@ share the same structure, so here is the first:
      - **Input Batch Handling:** If `input_sound` is a batch the outputs will be batches. The process is sequential, not parallel.
      - **Missing Models:** They are downloaded and stored under `models/audio/MDX` of the ComfyUI installation
 
+And here is the Demucs node:
+
+### Demucs Audio Separator
+   - **Display Name:** `Demucs Audio Separator`
+   - **Internal Name:** `AudioSeparateDemucs`
+   - **Category:** `audio/separation`
+   - **Description:** Takes one audio input (which can be a batch) separates the vocals, drums and bass from the rest of the sounds.
+     The node has outputs for guitar and piano, which can be separated by the *Hybrid Transformer 6 sources* model, which is quite
+     experimental.
+   - **Inputs:**
+     - `input_sound` (AUDIO): The audio input. Can be a single audio item or a batch.
+     - `model` (COMBO): The name of the model to use. Choose one from the list.
+     - `shifts` (INT): Number of random shifts for equivariant stabilization.
+        It does extra passes using slightly shifted audio, which can produce better results.
+        Higher values improve quality but are slower. 0 disables it.
+     - `overlap` (FLOAT): Amount of overlap between audio chunks.
+        This is expressed as a portion of the total chunk, i.e. 0.25 is 25%.
+        Higher values can reduce stitching artifacts but are slower.
+     - `custom_segment` (BOOLEAN): Enable to override the model's default segment length.
+        Disabling uses the recommended length from the model file.
+        Useful for HDemucs and Demucs models, not much for HTDemucs.
+     - segment (INT): Length of audio chunks to process at a time (in seconds).
+        Higher values need more VRAM but can improve quality.
+     - `taget_device` (COMBO): The device where we will run the neural network.
+   - **Output:**
+     - `Vocals` (AUDIO): The separated vocals
+     - `Drums` (AUDIO): The separated drums. Not for "UVR" version.
+     - `Bass` (AUDIO): The separated bass. Not for "UVR" version.
+     - `Other` (AUDIO): The separated stuff that doesn't fit in the other outputs
+     - `Guitar` (AUDIO): The separated guitar, only for *Hybrid Transformer 6 sources* model, which is quite
+     - `Piano` (AUDIO): The separated piano, only for *Hybrid Transformer 6 sources* model, which is quite
+   - **Behavior Details:**
+     - **Sample Rate:** The sample rate of the input is adjusted to 44.1 kHz
+     - **Channels:** Mono audios are converted to fake stereo (left == right)
+     - **Input Batch Handling:** If `input_sound` is a batch the outputs will be batches.
+     - **Missing Models:** They are downloaded and stored under `models/audio/Demucs` of the ComfyUI installation
+     - **Models:** Note that most models are a *bag of models*, this is four models working together.
+
 
 ## &#x0001F4DD; Usage Notes
 
@@ -217,6 +259,8 @@ share the same structure, so here is the first:
   You can control log verbosity through ComfyUI's startup arguments (e.g., `--preview-method auto --verbose DEBUG` for more detailed ComfyUI logs
   which might also affect custom node loggers if they are configured to inherit levels). The logger name used is "AudioSeparation".
   You can force debugging level for these nodes defining the `AUDIOSEPARATION_NODES_DEBUG` environment variable to `1`.
+- **Models format:** We use safetensors because this format is safer than PyTorch files (.pth, .th, etc.) and doesn't need an extra runtime (like ONNX does)
+- **No quantized Demucs:** These models just save download time, but pulls extra dependency (diffq), they are just lower quality versions of their non-quantized counterparts.
 
 
 ## &#x2696;&#xFE0F; License
@@ -237,6 +281,7 @@ ______
 - Models collected by the [UVR5 project](https://github.com/Anjok07/ultimatevocalremovergui) and
   found in the [UVR Resources](https://huggingface.co/Politrees/UVR_resources) by
   [Artyom Bebroy](https://github.com/Politrees)
+- Demucs models are from Meta Platforms, Inc. Except for the "UVR" version
 - The logo image was created using text generated using [Text Studio](https://www.textstudio.com/) and
   resources from [Vecteezy](https://www.vecteezy.com/) by:
      - [Titima Ongkantong](https://www.vecteezy.com/members/titima157)

@@ -22,7 +22,8 @@ known_models_mtime = None
 ICON_REMOTE = "⬇️  "         # "\u2B07"      # ⬇️
 ICON_DOWNLOADED = "\U0001F4BE "  # 💾 Floppy Disk
 KNOWN_SOURCES = {'Politrees/MDXNet': 'https://huggingface.co/Politrees/UVR_resources/resolve/main/models/MDXNet',
-                 'Main/MDX': 'https://huggingface.co/set-soft/audio_separation/resolve/main/MDX'}
+                 'Main/MDX': 'https://huggingface.co/set-soft/audio_separation/resolve/main/MDX',
+                 'Main/Demucs': 'https://huggingface.co/set-soft/audio_separation/resolve/main/Demucs', }
 
 
 def get_db_filename(provided=None):
@@ -68,9 +69,10 @@ def load_known_models(json_path=None):
         logger.error("Error: The models database was not found at the expected location.")
         logger.error("Please check the directory structure.")
         return None
-    except json.JSONDecodeError:
-        logger.error(f"Error: The file at '{json_path}' is not a valid JSON file.")
-        return None
+    except json.JSONDecodeError as e:
+        msg = f"Error: The file at '{json_path}' is not a valid JSON file: {e}"
+        logger.error(msg)
+        raise ValueError(msg)
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
         return None
@@ -125,6 +127,8 @@ def get_models_full(primary_stem=None, model_t=None, file_t=None, json_path=None
     # Allow for multiple values in the filters
     if isinstance(primary_stem, str):
         primary_stem = {primary_stem}
+    elif isinstance(primary_stem, list):
+        primary_stem = set(primary_stem)
     if isinstance(model_t, str):
         model_t = {model_t}
     if isinstance(file_t, str):
@@ -153,8 +157,14 @@ def get_models_full(primary_stem=None, model_t=None, file_t=None, json_path=None
             continue
         # Check the stem
         try:
-            if primary_stem is not None and d['primary_stem'] not in primary_stem:
-                continue
+            if primary_stem is not None:
+                mps = d['primary_stem']
+                if isinstance(mps, str):
+                    if mps not in primary_stem:
+                        continue
+                else:  # A list
+                    if not (set(mps) & primary_stem):
+                        continue
         except KeyError:
             logger.error(f"Missing `primary_stem` for {name}")
             continue
@@ -201,6 +211,7 @@ def get_models_full(primary_stem=None, model_t=None, file_t=None, json_path=None
                     on_disk_as_down.append(ICON_REMOTE + filtered_name)
             else:
                 to_down.append(ICON_REMOTE + filtered_name)
+        d['hash'] = hash
         found[filtered_name] = d
         found_hashes[hash] = d
         if file_name is not None:
@@ -228,14 +239,19 @@ def get_download_url(data):
         return None
 
 
+def cli_add_db(parser, default_json_file=None):
+    default_json_file = default_json_file or get_db_filename()
+    parser.add_argument('--json_file', type=str, default=default_json_file,
+                        help="Path to the models database JSON file.")
+
+
 def cli_add_models_and_db(parser):
     # Compute the models dir assuming the script is run from a clone of the repo
     default_json_file = get_db_filename()
 
     parser.add_argument('--models_dir', type=str, default=os.path.dirname(default_json_file),
                         help="Path to the directory containing model files.")
-    parser.add_argument('--json_file', type=str, default=default_json_file,
-                        help="Path to the models database JSON file.")
+    cli_add_db(parser, default_json_file=default_json_file)
 
 
 def download_model(data, models_dir):
@@ -305,12 +321,41 @@ class ModelsDB(object):
     def __init__(self, models_dir: str, json_path: str = None):
         super().__init__()
         self.models_dir = models_dir
-        self.json_path = json_path
+        self.json_path = get_db_filename(json_path)
         self.refresh()
 
     def refresh(self):
         self.downloaded = hash_dir(self.models_dir)
         self.models = load_known_models(self.json_path)
+
+    def remove(self, data):
+        if data is None:
+            return
+        del self.models[data["hash"]]
+
+    def add(self, hash, data):
+        self.models[hash] = data
+
+    def save(self):
+        # Remove run-time information
+        for k, v in self.models.items():
+            try:
+                del v["hash"]
+            except KeyError:
+                pass
+            try:
+                del v["indicator"]
+            except KeyError:
+                pass
+            try:
+                del v["filtered_name"]
+            except KeyError:
+                pass
+            try:
+                del v["model_path"]
+            except KeyError:
+                pass
+        save_known_models(self.models, self.json_path)
 
     def get_filtered(self, primary_stem=None, model_t=None, file_t=None, default=None, repeat_dl=False):
         return FilteredModels(primary_stem=primary_stem, model_t=model_t, file_t=file_t, json_path=self.json_path,

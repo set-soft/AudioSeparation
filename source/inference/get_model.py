@@ -4,18 +4,114 @@
 # Project: ComfyUI-AudioSeparation
 #
 # Helper to get a model from the correct class
+import importlib
+import json
 import logging
+from safetensors import safe_open
 from .MDX_Net import MDX_Net
-from ..utils.misc import NODES_NAME
+from ..utils.misc import NODES_NAME, json_object_hook
+# Demucs class imports
+from .demucs_api import BagOfModels
 
 logger = logging.getLogger(f"{NODES_NAME}.get_model")
 
 
-# Currently we have just one type of networks, but this is a clean way to support more, or even test replacements
+def get_metadata(file_path):
+    """ Read the metadata from a safetensors file """
+    logger.debug(f"Reading metadata from {file_path}")
+    metadata = {}
+    with safe_open(file_path, framework="pt", device="cpu") as f:
+        metadata = f.metadata()
+    if not metadata:
+        raise ValueError(f"Could not read metadata from safetensors file: {file_path}")
+    return metadata
+
+
+def get_hyperparameter(metadata, parameter, as_type, default=None, warn_diff=True):
+    value = metadata.get(parameter)
+    if value is None:
+        if default is None:
+            raise ValueError(f"Missing `{parameter}` hyperparameter")
+        return default
+    if as_type == "int":
+        value = int(value)
+    if warn_diff and value != default:
+        logger.warning(f"Hyperparameter mismatch: database = {default}, metadata = {value}")
+    return value
+
+
+def get_mdx_model(d):
+    """ Create an MDX_Net object with the specified parameters """
+    # Check the file is consistent we our data base
+    metadata = get_metadata(d['model_path'])
+    dim_f = get_hyperparameter(metadata, 'mdx_dim_f_set', "int", d['mdx_dim_f_set'])
+    channels = get_hyperparameter(metadata, 'channels', "int", d['channels'])
+    stages = get_hyperparameter(metadata, 'stages', "int", d['stages'])
+    # Create a class with this parameters
+    return MDX_Net(dim_f=dim_f, ch=channels, num_stages=stages)
+
+
+def get_demucs_model(d):
+    """ Create a Demucs, HDemucs (Hybrid) or HTDemucs (Hybrid Transformer) object.
+        All metadata comes from the safetensors """
+    file_path = d['model_path']
+
+    # 1. First, open the file safely to read only the metadata header.
+    metadata = get_metadata(file_path)
+
+    is_bag = json.loads(metadata.get('is_bag_of_models', 'false'))
+    signatures = json.loads(metadata['signatures'])
+
+    sub_models = []
+    for sig in set(signatures):  # Use set to only instantiate each unique architecture once
+        model_meta_str = metadata.get(sig)
+        if not model_meta_str:
+            raise ValueError(f"Metadata for signature '{sig}' not found in safetensors file.")
+
+        # Use the object_hook here to reconstruct Fraction objects automatically
+        model_meta = json.loads(model_meta_str, object_hook=json_object_hook)
+
+        class_module, class_name = model_meta['class_module'], model_meta['class_name']
+        args, kwargs = model_meta['args'], model_meta['kwargs']
+
+        logger.debug(f"  - Reconstructing architecture for '{sig}': {class_module}.{class_name}")
+        assert '.' not in class_name, "Security check failed, won't import a file outside my directory"
+        # Import the class from a module in this dir with the same name as the class
+        local_class_module = '.'.join(__name__.split('.')[:-1]) + "." + class_name
+        logger.debug(f"  - Redirecting class: {class_module} -> {local_class_module}")
+        module = importlib.import_module(local_class_module)
+        klass = getattr(module, class_name)
+
+        sub_models.append({'sig': sig, 'model': klass(*args, **kwargs)})
+
+    # Create a mapping from signature to model instance
+    model_map = {m['sig']: m['model'] for m in sub_models}
+
+    # Re-order the models to match the YAML's signature list
+    ordered_models = [model_map[sig] for sig in signatures]
+    segment = float(metadata.get('segment', '0'))
+
+    if not is_bag:
+        final_model = ordered_models[0]
+        final_model.signatures = signatures
+    else:
+        logger.debug("Rebuilding BagOfModels container...")
+        weights = json.loads(metadata.get('weights', 'null'))
+
+        final_model = BagOfModels(ordered_models, weights=weights, segment=segment)
+        final_model.signatures = signatures
+
+    final_model.config_segment = segment
+
+    return final_model
+
+
 def get_model(d):
     model_t = d['model_t'].lower()
-    if model_t != "mdx":
-        msg = f"Unknown model type `{model_t}`"
-        logger.error(msg)
-        raise ValueError(msg)
-    return MDX_Net(dim_f=d['mdx_dim_f_set'], ch=d['channels'], num_stages=d['stages'])
+    if model_t == "mdx":
+        return get_mdx_model(d)
+    elif model_t == "demucs":
+        return get_demucs_model(d)
+    msg = f"Unknown model type `{model_t}`"
+    logger.error(msg)
+    raise ValueError(msg)

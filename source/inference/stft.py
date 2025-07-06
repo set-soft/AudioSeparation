@@ -126,7 +126,6 @@ def stft_chunk_process(waveform, d, model_run, device, segment_size=256, hop_len
 
     total_chunks = 1 + (mixture.shape[1] - chunk_size + step - 1) // step
     logger.info(f"⚙️  Processing {total_chunks} chunks...")
-    model_run.target_device = device
 
     with model_to_target(model_run):
         for i in tqdm(range(0, mixture.shape[1] - chunk_size + 1, step)):
