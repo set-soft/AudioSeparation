@@ -13,6 +13,13 @@ Might work for other ONNX files using the same operands.
 But you'll need a PyTorch class for its architecture that creates the layers
 in the same order as the ONNX file.
 
+# Demucs to safetensors
+
+File: demucs2safetensors.py
+
+From a YAML file and the PyTorch components it creates safetensors version of the Demucs file.
+All metadata and models are contained in the new file.
+
 # Batch converter
 
 File: batch_convert.py
@@ -58,6 +65,13 @@ File: show_class.py
 Used to display our PyTorch class, also the state_dict keys.
 It can optionally export the class structure as an ONNX file that can be loaded by
 Netron, but contains too much extra names.
+
+# Show Metadata
+
+File: show_metadata.py
+
+Used to display our safetensors metadata.
+It can decode structures in JSON format we use for Demucs.
 
 # Style Fixer
 
