@@ -99,7 +99,6 @@ _initial_setup_logger.debug(f"{NODES_NAME} logger level set to: {final_level_str
 
 def logger_set_standalone(args):
     verbose = args.verbose
-    global main_logger
     main_logger.setLevel(logging.DEBUG - (verbose - 1) if verbose else logging.INFO)
     global standalone_mode
     standalone_mode = True
