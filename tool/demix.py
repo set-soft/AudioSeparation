@@ -46,6 +46,8 @@ def demix(d, args):
 
     if args.save_complement:
         for wav in wavs[1:]:
+            if wav is None:
+                continue
             out_path = f"{args.out_base or base}_{wav['stem']}{out_ext}"
             save_audio(wav['waveform'], wav['sample_rate'], out_path, out_format)
 
@@ -70,7 +72,7 @@ if __name__ == "__main__":
     parser.add_argument('--no_main', dest='save_main', action='store_false',
                         help="Do not save the main separated stem.")
     parser.add_argument('--save_complement', action='store_true',
-                        help="Save the complement stem (input - main).")
+                        help="Save all the stems, including the complement stem (input - main).")
     parser.add_argument('--out_base', type=str, default=None,
                         help="Base for the output path. No extension here, we will add the name of the stem and extension")
     parser.add_argument('--format', type=str, default=None, choices=['wav', 'flac', 'mp3'],
@@ -117,7 +119,7 @@ if __name__ == "__main__":
     # Look for the selected model
     d = models.get(args.model)
     if d is None:
-        main_logger.error(f"💥 Unknown model `{args.model}`.")
+        main_logger.error(f"💥 Unknown model `{args.model}`. If you provided a file check it exists")
         sys.exit(3)
     try:
         main_logger.info(f"📂 Using model from `{d['model_path']}`")
