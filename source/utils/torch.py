@@ -34,6 +34,23 @@ def get_torch_device_options():
     return options, default
 
 
+def get_offload_device():
+    return mm.unet_offload_device() if with_comfy else torch.device("cpu")
+
+
+def get_canonical_device(device: str | torch.device) -> torch.device:
+    """Converts a device string or object into a canonical torch.device object with an explicit index."""
+    if not isinstance(device, torch.device):
+        device = torch.device(device)
+
+    # If it's a CUDA device and no index is specified, get the default one.
+    if device.type == 'cuda' and device.index is None:
+        # NOTE: This adds a dependency on torch.cuda.current_device()
+        # The first solution is often better as it doesn't need this.
+        return torch.device(f'cuda:{torch.cuda.current_device()}')
+    return device
+
+
 # ##################################################################################
 # # Helper for inference (Target device, offload, eval, no_grad and cuDNN Benchmark)
 # ##################################################################################
@@ -101,7 +118,7 @@ def model_to_target(model):
 
         # 7. Offload model back to CPU
         if with_comfy:
-            offload_device = mm.unet_offload_device()
+            offload_device = get_offload_device()
             current_device_after_yield = next(model.parameters()).device
             if current_device_after_yield != offload_device:
                 logger.debug(f"Offloading model from `{current_device_after_yield}` to offload device `{offload_device}`.")
