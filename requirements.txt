@@ -1,6 +1,7 @@
 torch
 torchaudio
 numpy
+safetensors
 tqdm
 # Optionals:
 # requests
