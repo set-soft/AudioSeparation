@@ -15,10 +15,12 @@ logger = logging.getLogger(f"{NODES_NAME}.load_model")
 
 
 def show_model_parameters(d):
-    logger.debug("Using model parameters:")
-    logger.debug(f"  Frequency Dimension (dim_f): {d['mdx_dim_f_set']}")
-    logger.debug(f"  Base Channels (ch): {d['channels']}")
-    logger.debug(f"  U-Net Stages: {d['stages']}")
+    model_t = d['model_t'].lower()
+    if model_t == 'mdx':
+        logger.debug("Using model parameters:")
+        logger.debug(f"  Frequency Dimension (dim_f): {d['mdx_dim_f_set']}")
+        logger.debug(f"  Base Channels (ch): {d['channels']}")
+        logger.debug(f"  U-Net Stages: {d['stages']}")
 
 
 def load_model(d, device, models_dir):
