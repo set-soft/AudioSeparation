@@ -9,6 +9,7 @@ test/
 .*~
 *.mp3
 models/all_public_uvr_models
+models/demucs
 __no__
 models/.catalog.csv
 0LEEME
