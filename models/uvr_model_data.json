@@ -5,6 +5,20 @@
     "063aadd735d58150722926dcbf5852a9": {
         "config_yaml": "model_2_stem_061321.yaml"
     },
+    "09c249b06a99f569ae2052564659de88": {
+        "desc": "Hybrid Transformer Demucs fine-tuned",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "htdemucs_ft.safetensors",
+        "params": "167937824",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
     "0ddfc0eb5792638ad5dc27850236c246": {
         "channels": 32,
         "compensate": 1.035,
@@ -89,6 +103,20 @@
     },
     "1e6165b601539f38d0a9330f3facffeb": {
         "config_yaml": "model_2_stem_061321.yaml"
+    },
+    "1f1dabb6daf9e306d3dfadeb89f5370f": {
+        "desc": "Hybrid Demucs v3, retrained",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "hdemucs_mmi.safetensors",
+        "params": "83637832",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
     },
     "203f2a3955221b64df85a41af87cf8f0": {
         "compensate": 1.035,
@@ -244,6 +272,19 @@
         "primary_stem": "Vocals",
         "stages": 5
     },
+    "3b90a44a87135fb7b0ac40ed8ee3e16a": {
+        "desc": "Hybrid Demucs MDX 2nd 2021B",
+        "download": "FBDemucs/mdx_final",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "mdx_extra.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
     "3bff56e6709357854e71cb2e7802733a": {
         "config_yaml": "config_dnr_bandit_bsrnn_multi_mus64.yaml",
         "is_karaoke": false,
@@ -353,6 +394,19 @@
         "primary_stem": "Vocals",
         "stages": 5
     },
+    "4bbb0edee1a61e7b0f0cd547f3c71af5": {
+        "desc": "Hybrid Demucs v3, retrained",
+        "download": "FBDemucs/mdx_final",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "hdemucs_mmi.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
     "4c0736aa53894dfc6e10f8d178bb8690": {
         "channels": 48,
         "compensate": 1.035,
@@ -382,6 +436,19 @@
         "params": 16684228,
         "primary_stem": "Vocals",
         "stages": 5
+    },
+    "4cca48cc43b93a35fd1e32f70371d5ae": {
+        "desc": "Hybrid Demucs MDX 1st 2021A",
+        "download": "FBDemucs/mdx_final",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "mdx.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
     },
     "4ffce4487f6372bafc2748b2dcdb893f": {
         "channels": 32,
@@ -575,6 +642,20 @@
         "is_roformer": true,
         "model_type": "SCNet"
     },
+    "7205f4e53ec3226681ecd0c38e2fa747": {
+        "desc": "Hybrid Transformer Demucs",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "htdemucs.safetensors",
+        "params": "41984456",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
     "73492b58195c3b52d34590d5474452f6": {
         "channels": 48,
         "compensate": 1.043,
@@ -610,6 +691,19 @@
         "is_karaoke": false,
         "is_roformer": true,
         "model_type": "SCNet"
+    },
+    "80b3c6fe5b8d60a191d7e4ee9029cd3b": {
+        "desc": "Hybrid Transformer Demucs fine-tuned",
+        "download": "FBDemucs/hybrid_transformer",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "htdemucs_ft.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
     },
     "8318a54fe1278ddcf78aad32145c0a6f": {
         "config_yaml": "deverb_bs_roformer_8_256dim_8depth.yaml",
@@ -728,6 +822,16 @@
     },
     "99b6ceaae542265a3b6d657bf9fde79f": {
         "config_yaml": "model_2_stem_full_band_8k.yaml"
+    },
+    "9a0be129a16a22799d5587650cf93c0b": {
+        "desc": "UVR Hybrid Demucs Bag",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "UVR_Demucs_Model_Bag.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Other"
+        ]
     },
     "9b806a49eb1d25c0dfa14a39ed0c51b8": {
         "channels": 32,
@@ -1037,6 +1141,21 @@
         "is_roformer": false,
         "model_type": "MDX23C"
     },
+    "c8ecb80b71516f0e450a50a23b919f6d": {
+        "desc": "Hybrid Transformer Demucs 6 sources",
+        "download": "FBDemucs/hybrid_transformer",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "htdemucs_6s.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other",
+            "Piano",
+            "Guitar"
+        ]
+    },
     "c93da97c0df6c6f20aa2504bfa2300a0": {
         "channels": 48,
         "compensate": 1.075,
@@ -1219,12 +1338,68 @@
         "primary_stem": "Drums",
         "stages": 5
     },
+    "dd72197c4f8987a7a033713fa15f0577": {
+        "desc": "Hybrid Transformer Demucs 6 sources",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "htdemucs_6s.safetensors",
+        "params": "27414996",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other",
+            "Piano",
+            "Guitar"
+        ]
+    },
+    "e2bccab7f9797842079390749eee8178": {
+        "desc": "Hybrid Demucs MDX A Reprod.",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "repro_mdx_a.safetensors",
+        "params": "434781792",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
+    "e2e55d3b30d5f6b345e3e81340542f56": {
+        "desc": "Hybrid Demucs MDX 2nd 2021B",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "mdx_extra.safetensors",
+        "params": "334543632",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
     "e3de6d861635ab9c1d766149edd680d6": {
         "config_yaml": "model1.yaml"
     },
     "e4ca75912fcff3224a19058e55facfbf": {
         "config_yaml": "config_vocals_mel_band_roformer_kim.yaml",
         "is_roformer": true
+    },
+    "e4e0c3604695bafc2227555268e37942": {
+        "desc": "UVR Hybrid Demucs Bag",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "UVR_Demucs_Model_Bag.safetensors",
+        "params": "167266424",
+        "primary_stem": [
+            "Vocals",
+            "Other"
+        ]
     },
     "e5572e58abf111f80d8241d2e44e7fa4": {
         "channels": 48,
@@ -1259,6 +1434,20 @@
     "e7a25f8764f25a52c1b96c4946e66ba2": {
         "config_yaml": "sndfx.yaml"
     },
+    "e94afebb192786ecb9c2111c4eac0835": {
+        "desc": "Hybrid Demucs MDX 1st 2021A",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "mdx.safetensors",
+        "params": "345460200",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
+    },
     "e9b82ec90ee56c507a3a982f1555714c": {
         "config_yaml": "model_2_stem_full_band_2.yaml"
     },
@@ -1268,6 +1457,19 @@
         "mdx_dim_t_set": 8,
         "mdx_n_fft_scale_set": 6144,
         "primary_stem": "Instrumental"
+    },
+    "ed35ab1c2a2ca529c140636927051b71": {
+        "desc": "Hybrid Demucs MDX A Reprod.",
+        "download": "FBDemucs/mdx_final",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "repro_mdx_a.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
     },
     "eedf36b526be391ad07b04ad4493854d": {
         "channels": 48,
@@ -1343,6 +1545,19 @@
         "params": 16684228,
         "primary_stem": "Instrumental",
         "stages": 5
+    },
+    "f9416d8432ab7ee47c4676bf0c1f8aa7": {
+        "desc": "Hybrid Transformer Demucs",
+        "download": "FBDemucs/hybrid_transformer",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "htdemucs.yaml",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ]
     },
     "fbbf86f7d863a6df7fb5e19b939a9f58": {
         "channels": 32,
