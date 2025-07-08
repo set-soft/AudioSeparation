@@ -57,7 +57,10 @@ class DemixerMDX(DemixerGeneric):
         self.sr = SAMPLE_RATE
         self.ch = 2
 
-    def __call__(self, waveform, segments=1):
+    def __call__(self, waveform, segments=None):
+        if segments is None:
+            # To make it compatible with Demucs
+            segments = 1
         dim_t = (2 ** self.d['mdx_dim_t_set']) * segments
         try:
             # --- 1. Normalize input shape to handle both batched and non-batched data ---

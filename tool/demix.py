@@ -35,7 +35,7 @@ def demix(d, args):
     demixer = get_demixer(d, device, args.models_dir)
 
     # --- Do inference in chunks ---
-    wavs = demixer(waveform, args.segments)
+    wavs = demixer(waveform, args.segments if args.segments else None)
 
     # --- Save outputs ---
     base, ext = os.path.splitext(args.input_file)
@@ -80,8 +80,8 @@ if __name__ == "__main__":
                         help="Output audio format. Defaults to input format.")
 
     # --- Control Arguments ---
-    parser.add_argument('--segments', type=int, default=1,
-                        help="How many audio segments to process at once")
+    parser.add_argument('--segments', type=int, default=0,
+                        help="How many audio segments to process at once. 0 uses the value from the model")
     parser.add_argument('-l', '--list', action='store_true', help="Show available models")
     cli_add_verbose(parser)
 
