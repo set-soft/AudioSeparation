@@ -7,6 +7,7 @@
 # python tool/tool/demucs2safetensors.py --yaml DEMUCS.YAML
 # You must manually download the .th files and copy them to the YAML dir
 # First version by Gemini 2.5 Pro
+from contextlib import contextmanager
 from copy import deepcopy
 import argparse
 import json
@@ -28,7 +29,36 @@ from source.utils.misc import cli_add_verbose, FractionEncoder
 from source.utils.logger import main_logger, logger_set_standalone
 from source.db.models_db import cli_add_db, get_download_url, ModelsDB
 from source.db.hash import get_hash
+import source.inference.Demucs as local_demucs_module
+import source.inference.HDemucs as local_hdemucs_module
+import source.inference.HTDemucs as local_htdemucs_module
+MODULES_MAP = {'demucs': local_demucs_module,
+               'demucs.demucs': local_demucs_module,
+               'demucs.hdemucs': local_hdemucs_module,
+               'demucs.htdemucs': local_htdemucs_module}
 logger = main_logger
+
+
+@contextmanager
+def remap_module(modules_map):
+    """
+    A context manager to temporarily remap an old module name to a new one.
+    This is useful for loading pickled objects that depend on old paths.
+    """
+    original_modules = {}
+    for old_name, new_module in modules_map.items():
+        original_modules[old_name] = sys.modules.get(old_name)
+        sys.modules[old_name] = new_module
+    try:
+        yield
+    finally:
+        # Restore the original state
+        for old_name, original_module in original_modules.items():
+            if original_module is not None:
+                sys.modules[old_name] = original_module
+            else:
+                # If the module wasn't there before, remove our patch
+                del sys.modules[old_name]
 
 
 def convert_demucs_model(yaml_path_str: str, model_paths: list[str], output_path_str: str, all_metadata, data: Dict):
@@ -76,8 +106,10 @@ def convert_demucs_model(yaml_path_str: str, model_paths: list[str], output_path
         path = model_file_map[sig]
         main_logger.info(f"\n- Processing model '{sig}' from '{path.name}'...")
 
-        # This is the only "unsafe" part, loading the original pickle file
-        pkg = torch.load(path, map_location='cpu', weights_only=False)
+        # Use the context manager to perform the remap
+        with remap_module(MODULES_MAP):
+            # This is the only "unsafe" part, loading the original pickle file
+            pkg = torch.load(path, map_location='cpu', weights_only=False)
 
         klass, args, kwargs, state = pkg["klass"], pkg["args"], pkg["kwargs"], pkg["state"]
         main_logger.info(f"  - Model class: {klass.__module__}.{klass.__name__}")
