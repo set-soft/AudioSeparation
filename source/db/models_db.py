@@ -221,7 +221,7 @@ def get_models_full(primary_stem=None, model_t=None, file_t=None, json_path=None
     # Link the child models
     for d in found.values():
         parent_hash = d.get("parent")
-        if not parent_hash:
+        if not parent_hash or isinstance(parent_hash, dict):
             continue
         parent_obj = found_hashes.get(parent_hash)
         if not parent_obj:
