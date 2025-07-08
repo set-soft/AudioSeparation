@@ -8,15 +8,15 @@
 import argparse
 import os
 import sys
-import torch
 # Local imports
 import bootstrap  # noqa: F401
 from source.db.models_db import ModelsDB, cli_add_models_and_db
 from source.inference.demixer import get_demixer
-from source.utils.logger import main_logger, logger_set_standalone
 from source.utils.load_audio import load_audio
-from source.utils.save_audio import save_audio
+from source.utils.logger import main_logger, logger_set_standalone
 from source.utils.misc import cli_add_verbose
+from source.utils.save_audio import save_audio
+from source.utils.torch import get_torch_device_options, get_canonical_device
 
 BANNER = "🎵 MDX-Net Audio Separation Tool 🎵"
 
@@ -24,7 +24,8 @@ BANNER = "🎵 MDX-Net Audio Separation Tool 🎵"
 # --- Main Demixing Logic ---
 def demix(d, args):
     main_logger.info("🚀 Starting audio separation process...")
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    _, device = get_torch_device_options()
+    device = get_canonical_device(device)
     main_logger.info(f"💻 Using device: {device}")
 
     # --- Load and Prepare Audio ---
