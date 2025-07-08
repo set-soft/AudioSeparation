@@ -12,4 +12,5 @@ models/all_public_uvr_models
 models/demucs
 __no__
 models/.catalog.csv
+models/*.yaml
 0LEEME

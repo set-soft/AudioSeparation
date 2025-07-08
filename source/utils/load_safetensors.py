@@ -38,15 +38,17 @@ def load_safetensors(model_path, model_run, device):
         signatures = model_run.signatures
         if len(signatures) == 1:
             # Single model
-            sig = signatures[0]
-            logger.debug(f"Single model with filtered keys, prefix: {sig}")
+            prefix = f"{signatures[0]}."
+            logger.debug(f"Single model with filtered keys, prefix: {prefix}")
             # Just remove the prefix
-            state_dict = {k[len(sig)+1:]: v for k, v in state_dict.items()}
+            # Note: child models needs the if k.startswith(prefix) because they contain extra keys
+            state_dict = {k[len(prefix):]: v for k, v in state_dict.items() if k.startswith(prefix)}
             # The rest is as a regular model
         else:
             # Bag of models, load the keys for each sub-model
             logger.debug("Multiple models with filtered keys")
-            for sub_model, sig in zip(model_run.models, signatures):
+            # Load weights, but just once when the same model is used more than once
+            for sig, sub_model in {s: m for m, s in zip(model_run.models, signatures)}.items():
                 prefix = f"{sig}."
                 logger.debug(f"  - Filtering {prefix}")
                 sub_state_dict = {k[len(prefix):]: v for k, v in state_dict.items() if k.startswith(prefix)}

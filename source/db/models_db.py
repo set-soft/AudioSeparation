@@ -218,6 +218,17 @@ def get_models_full(primary_stem=None, model_t=None, file_t=None, json_path=None
             d['model_path'] = downloaded[hash]
             found_disk[os.path.realpath(file_name)] = d
 
+    # Link the child models
+    for d in found.values():
+        parent_hash = d.get("parent")
+        if not parent_hash:
+            continue
+        parent_obj = found_hashes.get(parent_hash)
+        if not parent_obj:
+            logger.error(f"Inconsistency in database, model `{d['name']}` points to unknown hash `{parent_hash}`")
+            continue
+        d["parent"] = parent_obj
+
     return found, found_hashes, found_disk, def_sep + sorted(on_disk) + sorted(to_down) + sorted(on_disk_as_down)
 
 
@@ -339,6 +350,13 @@ class ModelsDB(object):
     def save(self):
         # Remove run-time information
         for k, v in self.models.items():
+            try:
+                # Make children just refer to parent's hash, not the actual parent
+                parent = v["parent"]
+                if isinstance(parent, dict):
+                    v["parent"] = parent["hash"]
+            except KeyError:
+                pass
             try:
                 del v["hash"]
             except KeyError:

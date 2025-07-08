@@ -80,7 +80,7 @@ def hash_dir(directory_path: str) -> dict:
         # 4. Filter by file size.
         try:
             file_size = os.path.getsize(file_path)
-            if file_size < MIN_FILE_SIZE_BYTES:
+            if file_size < MIN_FILE_SIZE_BYTES and not filename.lower().endswith('.yaml'):
                 logger.debug(f"Skipping small file: '{filename}' ({file_size / 1024**2:.2f}MB)")
                 continue
         except OSError as e:

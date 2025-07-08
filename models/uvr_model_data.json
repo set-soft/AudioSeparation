@@ -591,6 +591,24 @@
         "primary_stem": "Other",
         "stages": 5
     },
+    "65dd0f678ed827e4e434d97255639c38": {
+        "desc": "Hybrid Demucs MDX A Rep. TO",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "is_bag_of_models": "true",
+        "model_t": "Demucs",
+        "name": "repro_mdx_a_time_only.yaml",
+        "params": "267506128",
+        "parent": "e2bccab7f9797842079390749eee8178",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ],
+        "segment": "44",
+        "signatures": "[\"9a6b4851\", \"9a6b4851\", \"1ef250f1\", \"1ef250f1\"]"
+    },
     "6703e39f36f18aa7855ee1047765621d": {
         "channels": 32,
         "compensate": 1.035,
@@ -772,6 +790,24 @@
         "mdx_dim_t_set": 8,
         "mdx_n_fft_scale_set": 5120,
         "primary_stem": "Instrumental"
+    },
+    "8abca393bc679ca0336a0ba8ca0e732d": {
+        "desc": "Hybrid Demucs MDX A Rep. HO",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "is_bag_of_models": "true",
+        "model_t": "Demucs",
+        "name": "repro_mdx_a_hybrid_only.yaml",
+        "params": "167275664",
+        "parent": "e2bccab7f9797842079390749eee8178",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ],
+        "segment": "44",
+        "signatures": "[\"fa0cb7f9\", \"902315c2\", \"fa0cb7f9\", \"902315c2\"]"
     },
     "8b15e58e9f33ee39346be7f636ad1d63": {
         "channels": 32,
@@ -1135,6 +1171,21 @@
         "primary_stem": "Bass",
         "stages": 5
     },
+    "c50d9f98739139dbc9fd2477931d686e": {
+        "desc": "UVR Hybrid Demucs 2",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "UVR_Demucs_Model_2.yaml",
+        "params": "83633212",
+        "parent": "e4e0c3604695bafc2227555268e37942",
+        "primary_stem": [
+            "Vocals",
+            "Other"
+        ],
+        "segment": "44",
+        "signatures": "[\"ebf34a2d\"]"
+    },
     "c7500d7fdb1c0fc24b14b698515462d2": {
         "config_yaml": "config_mdx23c_similarity.yaml",
         "is_karaoke": false,
@@ -1218,6 +1269,21 @@
         "params": 16684228,
         "primary_stem": "Instrumental",
         "stages": 5
+    },
+    "ccdd9985f1f7cbe62bf1e1a3abfcbd3c": {
+        "desc": "UVR Hybrid Demucs 1",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "UVR_Demucs_Model_1.yaml",
+        "params": "83633212",
+        "parent": "e4e0c3604695bafc2227555268e37942",
+        "primary_stem": [
+            "Vocals",
+            "Other"
+        ],
+        "segment": "44",
+        "signatures": "[\"ebf34a2db\"]"
     },
     "cd5b2989ad863f116c855db1dfe24e39": {
         "channels": 48,

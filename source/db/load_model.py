@@ -32,6 +32,16 @@ def load_model(d, device, models_dir):
     if model_path is None:
         # It means it wasn't on disk
         model_path = download_model(d, models_dir)
+    # Is this a child model?
+    parent = d.get("parent")
+    if parent:
+        # Yes, we need the parent file
+        if not isinstance(parent, dict):
+            raise ValueError("Trying to load a broken child model")
+        model_path = parent.get('model_path')
+        if model_path is None:
+            # It means it wasn't on disk
+            model_path = download_model(parent, models_dir)
 
     # ONNX
     if file_t == "onnx":
