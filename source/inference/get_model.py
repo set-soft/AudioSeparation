@@ -9,14 +9,15 @@ import json
 import logging
 from safetensors import safe_open
 from .MDX_Net import MDX_Net
-from ..utils.misc import NODES_NAME, json_object_hook
+from ..utils.misc import NODES_NAME, json_object_hook, get_debug_level
 # Demucs class imports
 from .demucs_api import BagOfModels
+from .demucs_log_helper import log_demucs_model_info
 
 logger = logging.getLogger(f"{NODES_NAME}.get_model")
 
 
-def get_metadata(file_path, d):
+def get_metadata(file_path, d=None):
     """ Read the metadata from a safetensors file """
     logger.debug(f"Reading metadata from {file_path}")
     metadata = {}
@@ -25,6 +26,8 @@ def get_metadata(file_path, d):
     if not metadata:
         raise ValueError(f"Could not read metadata from safetensors file: {file_path}")
 
+    if d is None:
+        return metadata
     # Is this a child model?
     parent = d.get('parent')
     if parent:
@@ -57,7 +60,7 @@ def get_hyperparameter(metadata, parameter, as_type, default=None, warn_diff=Tru
 def get_mdx_model(d):
     """ Create an MDX_Net object with the specified parameters """
     # Check the file is consistent we our data base
-    metadata = get_metadata(d['model_path'])
+    metadata = get_metadata(d['model_path'], d)
     dim_f = get_hyperparameter(metadata, 'mdx_dim_f_set', "int", d['mdx_dim_f_set'])
     channels = get_hyperparameter(metadata, 'channels', "int", d['channels'])
     stages = get_hyperparameter(metadata, 'stages', "int", d['stages'])
@@ -123,6 +126,17 @@ def get_demucs_model(d):
         final_model.signatures = signatures
 
     final_model.config_segment = segment
+
+    debug_level = get_debug_level(logger)
+    if debug_level >= 1:
+        # Show some information of the resulting model
+        logger.debug("Model information:")
+        logger.debug(f"- Total models {len(ordered_models)}")
+        for n, m in enumerate(ordered_models):
+            tp = m.__class__.__name__
+            kwargs = model_meta['kwargs']
+            num = -1 if len(ordered_models) == 1 else n
+            log_demucs_model_info(num, tp, kwargs, logger.debug, extra=debug_level > 1)
 
     return final_model
 

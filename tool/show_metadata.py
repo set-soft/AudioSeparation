@@ -13,6 +13,7 @@ import bootstrap  # noqa: F401
 from source.utils.logger import main_logger, logger_set_standalone
 from source.utils.misc import cli_add_verbose, json_object_hook
 from source.inference.get_model import get_metadata
+from source.inference.demucs_log_helper import log_demucs_model_info
 
 
 def show_metadata(args):
@@ -23,11 +24,23 @@ def show_metadata(args):
     expanded = {k: json.loads(v, object_hook=json_object_hook) if v[0] in '{[' else v for k, v in d.items()}
     pprint(expanded)
 
+    sigs = expanded.get('signatures')
+    if sigs:
+        single = len(sigs) == 1
+        print("Demucs model")
+        if not single:
+            print(f"Composed by {len(sigs)} submodels")
+        # Demucs model
+        for n, s in enumerate(sigs):
+            d = expanded[s]
+            num = -1 if single else n
+            log_demucs_model_info(num, d['class_name'], d['kwargs'], print, extra=args.verbose)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Shows the safetensors metadata",
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('input_file', type=str, help="Path to the input ONNX model file.")
+    parser.add_argument('input_file', type=str, help="Path to the input safetensors model file.")
     cli_add_verbose(parser)
 
     args = parser.parse_args()

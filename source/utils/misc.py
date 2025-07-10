@@ -10,8 +10,12 @@ NODES_NAME = "AudioSeparation"
 NODES_DEBUG_VAR = NODES_NAME.upper() + "_NODES_DEBUG"
 
 
+def get_debug_level(logger):
+    return logging.DEBUG - logger.getEffectiveLevel() + 1
+
+
 def debugl(logger, level, msg):
-    if logger.getEffectiveLevel() <= logging.DEBUG - (level - 1):
+    if get_debug_level(logger) >= level:
         logger.debug(msg)
 
 
