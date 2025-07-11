@@ -13,7 +13,7 @@ import bootstrap  # noqa: F401
 from source.utils.logger import main_logger, logger_set_standalone
 from source.utils.misc import cli_add_verbose, json_object_hook
 from source.inference.get_model import get_metadata
-from source.inference.demucs_log_helper import log_demucs_model_info
+from source.inference.demucs_log_helper import DemucsModelInfo
 
 
 def show_metadata(args):
@@ -30,11 +30,12 @@ def show_metadata(args):
         print("Demucs model")
         if not single:
             print(f"Composed by {len(sigs)} submodels")
+        weights = expanded.get('weights')
         # Demucs model
         for n, s in enumerate(sigs):
             d = expanded[s]
             num = -1 if single else n
-            log_demucs_model_info(num, d['class_name'], d['kwargs'], print, extra=args.verbose)
+            DemucsModelInfo(num, d['class_name'], d['kwargs'], print, weights[n] if weights else None, extra=args.verbose)
 
 
 if __name__ == "__main__":

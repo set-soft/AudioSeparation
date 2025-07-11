@@ -12,7 +12,7 @@ from .MDX_Net import MDX_Net
 from ..utils.misc import NODES_NAME, json_object_hook, get_debug_level
 # Demucs class imports
 from .demucs_api import BagOfModels
-from .demucs_log_helper import log_demucs_model_info
+from .demucs_log_helper import DemucsModelInfo
 
 logger = logging.getLogger(f"{NODES_NAME}.get_model")
 
@@ -116,12 +116,12 @@ def get_demucs_model(d):
     segment = float(metadata.get('segment', '0'))
 
     if not is_bag:
+        weights = None
         final_model = ordered_models[0]
         final_model.signatures = signatures
     else:
         logger.debug("Rebuilding BagOfModels container...")
         weights = json.loads(metadata.get('weights', 'null'))
-
         final_model = BagOfModels(ordered_models, weights=weights, segment=segment)
         final_model.signatures = signatures
 
@@ -132,11 +132,21 @@ def get_demucs_model(d):
         # Show some information of the resulting model
         logger.debug("Model information:")
         logger.debug(f"- Total models {len(ordered_models)}")
+        if weights is not None and len(weights) != len(ordered_models):
+            raise ValueError(f"Invalid weights for {len(ordered_models)} models: {weights}")
         for n, m in enumerate(ordered_models):
             tp = m.__class__.__name__
             kwargs = model_meta['kwargs']
+            w = weights[n] if weights else None
+            if n == 0:
+                ref_sources = m.sources
+            else:
+                if m.sources != ref_sources:
+                    logger.error("The sub-model outputs doesn't match")
+            if w and len(m.sources) != len(w):
+                raise ValueError(f"Invalid {w} weights for {m.sources} sources")
             num = -1 if len(ordered_models) == 1 else n
-            log_demucs_model_info(num, tp, kwargs, logger.debug, extra=debug_level > 1)
+            DemucsModelInfo(num, tp, kwargs, logger.debug, w, extra=debug_level > 1)
 
     return final_model
 
