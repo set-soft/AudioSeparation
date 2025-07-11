@@ -35,7 +35,8 @@ def show_metadata(args):
         for n, s in enumerate(sigs):
             d = expanded[s]
             num = -1 if single else n
-            DemucsModelInfo(num, d['class_name'], d['kwargs'], print, weights[n] if weights else None, extra=args.verbose)
+            DemucsModelInfo(num, d['class_name'], d['kwargs'], print, weights[n] if weights else None, extra=args.verbose,
+                            sig=s)
 
 
 if __name__ == "__main__":

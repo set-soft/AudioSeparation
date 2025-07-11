@@ -105,8 +105,11 @@ def get_demucs_model(d):
         logger.debug(f"  - Redirecting class: {class_module} -> {local_class_module}")
         module = importlib.import_module(local_class_module)
         klass = getattr(module, class_name)
+        instance = klass(*args, **kwargs)
+        instance._signature = sig
+        instance._metadata = model_meta
 
-        sub_models.append({'sig': sig, 'model': klass(*args, **kwargs)})
+        sub_models.append({'sig': sig, 'model': instance})
 
     # Create a mapping from signature to model instance
     model_map = {m['sig']: m['model'] for m in sub_models}
@@ -136,7 +139,6 @@ def get_demucs_model(d):
             raise ValueError(f"Invalid weights for {len(ordered_models)} models: {weights}")
         for n, m in enumerate(ordered_models):
             tp = m.__class__.__name__
-            kwargs = model_meta['kwargs']
             w = weights[n] if weights else None
             if n == 0:
                 ref_sources = m.sources
@@ -146,7 +148,7 @@ def get_demucs_model(d):
             if w and len(m.sources) != len(w):
                 raise ValueError(f"Invalid {w} weights for {m.sources} sources")
             num = -1 if len(ordered_models) == 1 else n
-            DemucsModelInfo(num, tp, kwargs, logger.debug, w, extra=debug_level > 1)
+            DemucsModelInfo(num, tp, m._metadata['kwargs'], logger.debug, w, extra=debug_level > 1, sig=m._signature)
 
     return final_model
 

@@ -6,7 +6,7 @@ rlogger = logging.getLogger(f"{NODES_NAME}.demucs_log")
 
 
 class DemucsModelInfo(object):
-    def __init__(self, index, klass_name: str, kwargs: dict, logger, weights, extra=False):
+    def __init__(self, index, klass_name: str, kwargs: dict, logger, weights, extra=False, sig=None):
         super().__init__()
         self.index = index
         self.kwargs = kwargs
@@ -14,6 +14,7 @@ class DemucsModelInfo(object):
         self.extra = extra
         self.extra_indent = ""
         self.weights = weights
+        self.signature = sig
 
         # Always log these fundamental parameters
         sr = kwargs.get('samplerate', 44100)
@@ -40,7 +41,10 @@ class DemucsModelInfo(object):
 
     def log_type(self, name):
         start = "" if self.index < 0 else f"{self.index+1}. "
-        self.logger(f"  {start}Type: {name}")
+        msg = f"  {start}Type: {name}"
+        if self.signature:
+            msg += f" [{self.signature}]"
+        self.logger(msg)
 
     def _log_param(self, param_name, default, description="", unit="", indent="  ", can_skip=False):
         """
