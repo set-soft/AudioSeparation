@@ -1,7 +1,7 @@
 [project]
 name = "audio-separation"
-description = "Audio separation (aka demixing) nodes, for Vocals, Instruments, Bass, Drums and Others. Using MDX-Net, no extra dependencies, support for batch and resample."
-version = "1.0.0"
+description = "Audio separation (aka demixing) nodes, for Vocals, Instruments, Bass, Drums and Others (experimental Piano and Guitar). Using MDX-Net and Demucs, no extra dependencies, support for batch and resample. Choose between High Quality and Speed. All safetensor models (No ONNX, No PyTorch)"
+version = "1.1.0"
 license = { file = "LICENSE" }
 dependencies = []
 
