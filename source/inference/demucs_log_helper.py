@@ -157,6 +157,16 @@ class DemucsModelInfo(object):
     def stft(self):
         self.reset()
         self.add('nfft', 4096, "Frequency Bins")
+        # Decode the method
+        cac = self.get('cac')
+        niters = self.get('wiener_iters')
+        if cac:
+            zout = "Complex as Channels (CaC)"
+        elif niters >= 0:
+            zout = "Wiener filtering"
+        else:
+            zout = "Naive iSTFT from masking"
+        self.add('___', zout, "Framework")
         self.add('cac', True, "Use Complex as Channels")
         if not self.get('cac', True):
             self.add('wiener_iters', 0, "Wiener filter iterations")
