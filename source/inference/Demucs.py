@@ -11,8 +11,8 @@ import typing as tp
 import torch
 from torch import nn
 from torch.nn import functional as F
+import torchaudio
 
-from .resample_frac import resample_frac   # From julius
 from .demucs_code import capture_init, center_trim, unfold
 from .CrossTransformerEncoder import LayerScale
 
@@ -373,6 +373,8 @@ class Demucs(nn.Module):
         if rescale:
             rescale_module(self, reference=rescale)
 
+        self.upsampler = self.downsampler = None
+
     def valid_length(self, length):
         """
         Return the nearest valid length to use with the model so that
@@ -413,7 +415,16 @@ class Demucs(nn.Module):
         x = F.pad(x, (delta // 2, delta - delta // 2))
 
         if self.resample:
-            x = resample_frac(x, 1, 2)
+            if self.upsampler is None:
+                # Create the resamplers as instance attributes.
+                # They will be automatically moved to the correct device when model.to(device) is called.
+                self.upsampler = torchaudio.transforms.Resample(orig_freq=self.samplerate,
+                                                                new_freq=2 * self.samplerate,
+                                                                lowpass_filter_width=24).to(x.device)
+                self.downsampler = torchaudio.transforms.Resample(orig_freq=2 * self.samplerate,
+                                                                  new_freq=self.samplerate,
+                                                                  lowpass_filter_width=24).to(x.device)
+            x = self.upsampler(x)
 
         saved = []
         for encode in self.encoder:
@@ -429,7 +440,7 @@ class Demucs(nn.Module):
             x = decode(x + skip)
 
         if self.resample:
-            x = resample_frac(x, 2, 1)
+            x = self.downsampler(x)
         x = x * std + mean
         x = center_trim(x, length)
         x = x.view(x.size(0), len(self.sources), self.audio_channels, x.size(-1))
