@@ -159,7 +159,7 @@ class DemucsModelInfo(object):
         self.add('nfft', 4096, "Frequency Bins")
         # Decode the method
         cac = self.get('cac')
-        niters = self.get('wiener_iters')
+        niters = self.get('wiener_iters', 0)
         if cac:
             zout = "Complex as Channels (CaC)"
         elif niters >= 0:
