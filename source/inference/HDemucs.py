@@ -11,7 +11,7 @@ from copy import deepcopy
 import math
 import typing as tp
 
-# from .wiener import wiener   # From openunmix.filtering
+from .wiener import wiener   # From openunmix.filtering
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -660,33 +660,32 @@ class HDemucs(nn.Module):
             return self._wiener(m, z, niters)
 
     def _wiener(self, mag_out, mix_stft, niters):
-        raise ValueError("Wiener not implemented, please contact the project")
-#         # apply wiener filtering from OpenUnmix.
-#         init = mix_stft.dtype
-#         wiener_win_len = 300
-#         residual = self.wiener_residual
-#
-#         B, S, C, Fq, T = mag_out.shape
-#         mag_out = mag_out.permute(0, 4, 3, 2, 1)
-#         mix_stft = torch.view_as_real(mix_stft.permute(0, 3, 2, 1))
-#
-#         outs = []
-#         for sample in range(B):
-#             pos = 0
-#             out = []
-#             for pos in range(0, T, wiener_win_len):
-#                 frame = slice(pos, pos + wiener_win_len)
-#                 z_out = wiener(
-#                     mag_out[sample, frame], mix_stft[sample, frame], niters,
-#                     residual=residual)
-#                 out.append(z_out.transpose(-1, -2))
-#             outs.append(torch.cat(out, dim=0))
-#         out = torch.view_as_complex(torch.stack(outs, 0))
-#         out = out.permute(0, 4, 3, 2, 1).contiguous()
-#         if residual:
-#             out = out[:, :-1]
-#         assert list(out.shape) == [B, S, C, Fq, T]
-#         return out.to(init)
+        # apply wiener filtering from OpenUnmix.
+        init = mix_stft.dtype
+        wiener_win_len = 300
+        residual = self.wiener_residual
+
+        B, S, C, Fq, T = mag_out.shape
+        mag_out = mag_out.permute(0, 4, 3, 2, 1)
+        mix_stft = torch.view_as_real(mix_stft.permute(0, 3, 2, 1))
+
+        outs = []
+        for sample in range(B):
+            pos = 0
+            out = []
+            for pos in range(0, T, wiener_win_len):
+                frame = slice(pos, pos + wiener_win_len)
+                z_out = wiener(
+                    mag_out[sample, frame], mix_stft[sample, frame], niters,
+                    residual=residual)
+                out.append(z_out.transpose(-1, -2))
+            outs.append(torch.cat(out, dim=0))
+        out = torch.view_as_complex(torch.stack(outs, 0))
+        out = out.permute(0, 4, 3, 2, 1).contiguous()
+        if residual:
+            out = out[:, :-1]
+        assert list(out.shape) == [B, S, C, Fq, T]
+        return out.to(init)
 
     def forward(self, mix):
         x = mix
