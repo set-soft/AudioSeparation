@@ -265,19 +265,23 @@ class DemixerDemucs(DemixerGeneric):
                     output_dict = {
                         "waveform": output_tensor,
                         "sample_rate": model.samplerate,
-                        "stem": stem_name.capitalize()
+                        "stem": stem_name.capitalize(),
+                        "generated": True,
                     }
                     final_outputs.append(output_dict)
                 else:
                     logger.debug(f"Stem '{stem_name}' not produced by model. Returning silence.")
                     # Create a silent tensor with the correct shape, device, and dtype
                     silent_waveform = torch.zeros(ref_batch_size, ref_channels, ref_samples, dtype=torch.float32)
+                    if not input_was_batched:
+                        silent_waveform = silent_waveform.squeeze(0)
 
                     # Wrap the silent tensor in the ComfyUI AUDIO dictionary format
                     silent_dict = {
                         "waveform": silent_waveform,
                         "sample_rate": model.samplerate,
-                        "stem": stem_name.capitalize()
+                        "stem": stem_name.capitalize(),
+                        "generated": False,
                     }
                     final_outputs.append(silent_dict)
 

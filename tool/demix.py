@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2025 Salvador E. Tropea
 # Copyright (c) 2025 Instituto Nacional de Tecnología Industrial
 # License: GPLv3
@@ -47,7 +48,7 @@ def demix(d, args):
 
     if args.save_complement:
         for wav in wavs[1:]:
-            if wav is None:
+            if wav is None or not wav['generated']:
                 continue
             out_path = f"{args.out_base or base}_{wav['stem']}{out_ext}"
             save_audio(wav['waveform'], wav['sample_rate'], out_path, out_format)
