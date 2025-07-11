@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2025 Salvador E. Tropea
 # Copyright (c) 2025 Instituto Nacional de Tecnología Industrial
 # License: GPLv3
