@@ -7,6 +7,7 @@
 import logging
 import math
 import torch
+import tqdm
 # ComfyUI imports
 try:
     import comfy.utils
@@ -19,6 +20,8 @@ from ..db.load_model import load_model
 from ..utils.misc import NODES_NAME
 from ..utils.torch import model_to_target, get_offload_device
 from .demucs_api import apply_model, BagOfModels
+
+from torchaudio.transforms import Fade
 
 logger = logging.getLogger(f"{NODES_NAME}.demixer")
 SAMPLE_RATE = 44100
@@ -135,6 +138,62 @@ def get_steps_for_demucs(model, wav, segment, shifts, overlap):
     return math.ceil(wav.shape[-1] / stride) * (shifts + 1)
 
 
+def separate_sources(
+    model: torch.nn.Module,
+    mix: torch.Tensor,
+    sample_rate: int,
+    segment: float = 10.0,
+    overlap: float = 0.1,
+    device: torch.device = None,
+    chunk_fade_shape: str = "linear",
+) -> torch.Tensor:
+    """
+    From: https://pytorch.org/audio/stable/tutorials/hybrid_demucs_tutorial.html
+
+    Apply model to a given mixture. Use fade, and add segments together in order to add model segment by segment.
+
+    Args:
+        segment (int): segment length in seconds
+        device (torch.device, str, or None): if provided, device on which to
+            execute the computation, otherwise `mix.device` is assumed.
+            When `device` is different from `mix.device`, only local computations will
+            be on `device`, while the entire tracks will be stored on `mix.device`.
+    """
+    batch, channels, length = mix.shape
+
+    chunk_len = int(sample_rate * segment * (1 + overlap))
+    start = 0
+    end = chunk_len
+    overlap_frames = overlap * sample_rate
+    fade = Fade(fade_in_len=0, fade_out_len=int(overlap_frames), fade_shape=chunk_fade_shape)
+    chunks = math.ceil((length - overlap_frames) / chunk_len)
+    # Progress bars
+    progress_bar_console = tqdm.tqdm(total=chunks)
+    if with_comfy:
+        comfy_progress_bar = comfy.utils.ProgressBar(chunks)
+
+    final = torch.zeros(batch, len(model.sources), channels, length, device=device)
+
+    while start < length - overlap_frames:
+        chunk = mix[:, :, start:end]
+        progress_bar_console.update(1)
+        if with_comfy:
+            comfy_progress_bar.update(1)
+        with torch.no_grad():
+            out = model.forward(chunk)
+        out = fade(out)
+        final[:, :, :, start:end] += out
+        if start == 0:
+            fade.fade_in_len = int(overlap_frames)
+            start += int(chunk_len - overlap_frames)
+        else:
+            start += chunk_len
+        end += chunk_len
+        if end >= length:
+            fade.fade_out_len = 0
+    return final
+
+
 class DemixerDemucs(DemixerGeneric):
     def __init__(self, d, device, models_dir):
         super().__init__(d, device, models_dir)
@@ -194,21 +253,49 @@ class DemixerDemucs(DemixerGeneric):
                     forced_segment = None
             else:
                 logger.debug(f"Using user provided segment size {forced_segment} s")
-            if with_comfy:
-                comfy_progress_bar = comfy.utils.ProgressBar(self.get_steps(waveform_tensor, forced_segment, shifts, overlap))
 
-            with model_to_target(model):
-                separated_tensors = apply_model(
-                    model,
-                    input_tensor_on_device,
-                    device=self.device,
-                    segment=forced_segment,
-                    shifts=shifts + 1,  # Shifts 0 is disabled, 1 is just one pass, 2 is 2 passes
-                    overlap=overlap,
-                    split=True,       # Enable chunking
-                    progress=True,    # Show a progress bar in the console
-                    callback=lambda x: (x.get('state') == 'end') and comfy_progress_bar.update(1) if with_comfy else None,
-                )
+            # Normalize the input tensors
+            ref = input_tensor_on_device.mean(1, keepdim=True)
+            mean = ref.mean(dim=2, keepdim=True)
+            std = ref.std(dim=2, keepdim=True)
+            input_tensor_on_device = (input_tensor_on_device - mean) / (std + 1e-8)
+
+            if self.d.get('use_demucs_pt_process', False):
+                # This is for the model from torchaudio, using the Demucs code we get some strange noises
+                # Using their example they aren't produced
+                model.target_device = self.device
+                logger.debug("Using PyTorch Audio chunking for old model")
+                with model_to_target(model):
+                    separated_tensors = separate_sources(
+                        model,
+                        input_tensor_on_device,
+                        model.samplerate,
+                        segment=forced_segment or 16.0,
+                        overlap=overlap,
+                        device=self.device,
+                        chunk_fade_shape="half_sine"
+                    )
+            else:
+                if with_comfy:
+                    comfy_progress_bar = comfy.utils.ProgressBar(self.get_steps(waveform_tensor, forced_segment, shifts,
+                                                                                overlap))
+                with model_to_target(model):
+                    separated_tensors = apply_model(
+                        model,
+                        input_tensor_on_device,
+                        device=self.device,
+                        segment=forced_segment,
+                        shifts=shifts + 1,  # Shifts 0 is disabled, 1 is just one pass, 2 is 2 passes
+                        overlap=overlap,
+                        split=True,       # Enable chunking
+                        progress=True,    # Show a progress bar in the console
+                        callback=lambda x: (x.get('state') == 'end') and comfy_progress_bar.update(1) if with_comfy else None,
+                    )
+
+            # Denormalize the output stems
+            mean = mean.unsqueeze(1)
+            std = std.unsqueeze(1)
+            separated_tensors = separated_tensors * std + mean
 
             # Move the final result tensor back to the CPU before creating the output dicts.
             # This is good practice to free up VRAM for subsequent nodes.

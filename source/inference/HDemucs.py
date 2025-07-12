@@ -70,7 +70,7 @@ class ScaledEmbedding(nn.Module):
 class HEncLayer(nn.Module):
     def __init__(self, chin, chout, kernel_size=8, stride=4, norm_groups=1, empty=False,
                  freq=True, dconv=True, norm=True, context=0, dconv_kw={}, pad=True,
-                 rewrite=True):
+                 rewrite=True, force_norm_in_last=False):
         """Encoder layer. This used both by the time and the frequency branch.
 
         Args:
@@ -109,6 +109,9 @@ class HEncLayer(nn.Module):
             pad = [pad, 0]
             klass = nn.Conv2d
         self.conv = klass(chin, chout, kernel_size, stride, pad)
+        if force_norm_in_last:
+            # PyTorch Audio uses it on last (empty) layer
+            self.norm1 = norm_fn(chout)
         if self.empty:
             return
         self.norm1 = norm_fn(chout)
@@ -257,7 +260,7 @@ class MultiWrap(nn.Module):
 class HDecLayer(nn.Module):
     def __init__(self, chin, chout, last=False, kernel_size=8, stride=4, norm_groups=1, empty=False,
                  freq=True, dconv=True, norm=True, context=1, dconv_kw={}, pad=True,
-                 context_freq=True, rewrite=True):
+                 context_freq=True, rewrite=True, force_norm_in_last=False):
         """
         Same as HEncLayer but for decoder. See `HEncLayer` for documentation.
         """
@@ -397,6 +400,7 @@ class HDemucs(nn.Module):
                  # Normalization
                  norm_starts=4,
                  norm_groups=4,
+                 force_norm_in_last=False,
                  # DConv residual branch
                  dconv_mode=1,
                  dconv_depth=2,
@@ -533,6 +537,7 @@ class HDemucs(nn.Module):
             kwt['kernel_size'] = kernel_size
             kwt['stride'] = stride
             kwt['pad'] = True
+            kwt['force_norm_in_last'] = force_norm_in_last
             kw_dec = dict(kw)
             multi = False
             if multi_freqs and index < multi_freqs_depth:

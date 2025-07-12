@@ -26,7 +26,7 @@ try:
 except Exception:
     with_demuc_lib = False
 import bootstrap  # noqa: F401
-from source.utils.misc import cli_add_verbose, FractionEncoder
+from source.utils.misc import cli_add_verbose, FractionEncoder, debugl
 from source.utils.logger import main_logger, logger_set_standalone
 from source.db.models_db import cli_add_db, get_download_url, ModelsDB
 from source.db.hash import get_hash
@@ -37,6 +37,10 @@ MODULES_MAP = {'demucs': local_demucs_module,
                'demucs.demucs': local_demucs_module,
                'demucs.hdemucs': local_hdemucs_module,
                'demucs.htdemucs': local_htdemucs_module}
+MAP = {'freq_encoder': 'encoder',
+       'freq_decoder': 'decoder',
+       'time_encoder': 'tencoder',
+       'time_decoder': 'tdecoder'}
 logger = main_logger
 
 
@@ -60,6 +64,36 @@ def remap_module(modules_map):
             else:
                 # If the module wasn't there before, remove our patch
                 del sys.modules[old_name]
+
+
+def solve_simple_pt(yaml_data, pkg):
+    """ PyTorch Audio lib has some raw models, we store the metadata in the YAML """
+    klass = yaml_data.get('klass')
+    if klass is None:
+        main_logger.error("No `klass` in YAML")
+        sys.exit(4)
+    if klass == 'Demucs':
+        klass = local_demucs_module.Demucs
+    elif klass == 'HDemucs':
+        klass = local_hdemucs_module.HDemucs
+    elif klass == 'HTDemucs':
+        klass = local_htdemucs_module.HTDemucs
+    else:
+        main_logger.error("Unknown model `klass` {klass}")
+        sys.exit(4)
+    args = yaml_data.get('args', {})
+    kwargs = yaml_data.get('kwargs', {})
+
+    # For PyTorch Audio model (very old code?)
+    new_dict = {}
+    for k, v in pkg.items():
+        parts = k.split('.')
+        gr = parts[0]
+        if gr in MAP:
+            k = MAP[gr] + '.' + '.'.join(parts[1:])
+        new_dict[k] = v
+
+    return klass, args, kwargs, new_dict
 
 
 def convert_demucs_model(yaml_path_str: str, model_paths: list[str], output_path_str: str, all_metadata, data: Dict):
@@ -112,7 +146,11 @@ def convert_demucs_model(yaml_path_str: str, model_paths: list[str], output_path
             # This is the only "unsafe" part, loading the original pickle file
             pkg = torch.load(path, map_location='cpu', weights_only=False)
 
-        klass, args, kwargs, state = pkg["klass"], pkg["args"], pkg["kwargs"], pkg["state"]
+        debugl(logger, 2, f"PyTorch data type is {type(pkg)}")
+        if isinstance(pkg, dict) and 'klass' in pkg:
+            klass, args, kwargs, state = pkg["klass"], pkg["args"], pkg["kwargs"], pkg["state"]
+        else:
+            klass, args, kwargs, state = solve_simple_pt(yaml_data, pkg)
         main_logger.info(f"  - Model class: {klass.__module__}.{klass.__name__}")
 
         # Dequantize if necessary by letting the original code handle it
@@ -163,6 +201,7 @@ def convert_demucs_model(yaml_path_str: str, model_paths: list[str], output_path
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Convert Demucs .th models to a single .safetensors file.")
+
     parser.add_argument('--yaml', required=True, type=str, help="Path to the Demucs .yaml file.")
     parser.add_argument('--models', nargs='*', default=None, type=str,
                         help="Optional. Paths to .th files. If not provided, assumes they are "
@@ -206,7 +245,7 @@ if __name__ == '__main__':
 
         model_files = []
         for sig in set(signatures):  # Use set to avoid redundant searches
-            found = list(yaml_dir.glob(f'{sig}*.th'))
+            found = list(yaml_dir.glob(f'{sig}*.th')) + list(yaml_dir.glob(f'{sig}*.pt'))
             if not found:
                 raise FileNotFoundError(f"Could not automatically find a model file for signature '{sig}' in {yaml_dir}")
             if len(found) > 1:

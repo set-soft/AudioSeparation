@@ -543,6 +543,21 @@
         "primary_stem": "Vocals",
         "stages": 5
     },
+    "5ee7b421b6228a90e63855b108ad830b": {
+        "desc": "Hybrid Demucs MusDB High Train",
+        "download": "Main/Demucs",
+        "file_t": "safetensors",
+        "model_t": "Demucs",
+        "name": "hdemucs_high_trained.safetensors",
+        "params": "83639368",
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ],
+        "use_demucs_pt_process": true
+    },
     "5f6483271e1efb9bfb59e4a3e6d4d098": {
         "channels": 32,
         "compensate": 1.035,
@@ -659,6 +674,21 @@
         "is_karaoke": false,
         "is_roformer": true,
         "model_type": "SCNet"
+    },
+    "6f82220b9fc8445331d3a246f4ab509a": {
+        "desc": "Hybrid Demucs MusDB High Train",
+        "download": "Torch/Demucs",
+        "file_t": "pytorch",
+        "model_t": "Demucs",
+        "name": "hdemucs_high_trained.yaml",
+        "params": 83639368,
+        "primary_stem": [
+            "Vocals",
+            "Drums",
+            "Bass",
+            "Other"
+        ],
+        "signatures": "[\"hdemucs_high_trained\"]"
     },
     "7205f4e53ec3226681ecd0c38e2fa747": {
         "desc": "Hybrid Transformer Demucs",
