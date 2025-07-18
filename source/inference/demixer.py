@@ -254,12 +254,6 @@ class DemixerDemucs(DemixerGeneric):
             else:
                 logger.debug(f"Using user provided segment size {forced_segment} s")
 
-            # Normalize the input tensors
-            ref = input_tensor_on_device.mean(1, keepdim=True)
-            mean = ref.mean(dim=2, keepdim=True)
-            std = ref.std(dim=2, keepdim=True)
-            input_tensor_on_device = (input_tensor_on_device - mean) / (std + 1e-8)
-
             if self.d.get('use_demucs_pt_process', False):
                 # This is for the model from torchaudio, using the Demucs code we get some strange noises
                 # Using their example they aren't produced
@@ -291,11 +285,6 @@ class DemixerDemucs(DemixerGeneric):
                         progress=True,    # Show a progress bar in the console
                         callback=lambda x: (x.get('state') == 'end') and comfy_progress_bar.update(1) if with_comfy else None,
                     )
-
-            # Denormalize the output stems
-            mean = mean.unsqueeze(1)
-            std = std.unsqueeze(1)
-            separated_tensors = separated_tensors * std + mean
 
             # Move the final result tensor back to the CPU before creating the output dicts.
             # This is good practice to free up VRAM for subsequent nodes.
