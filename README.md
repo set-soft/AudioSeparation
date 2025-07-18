@@ -53,6 +53,7 @@ The objectives for these nodes are:
 *   &#x2728; [Nodes](#-nodes)
     *   [Vocals using MDX](#vocals-using-mdx)
     *   [Demucs Audio Separator](#demucs-audio-separator)
+*   &#x0001F5BC;&#xFE0F; [Examples](#&#xFE0F;-examples)
 *   &#x0001F4DD; [Usage Notes](#-usage-notes)
 *   &#x2696;&#xFE0F; [License](#&#xFE0F;-license)
 *   &#x0001F64F; [Attributions](#-attributions)
@@ -249,6 +250,17 @@ And here is the Demucs node:
      - **Missing Models:** They are downloaded and stored under `models/audio/Demucs` of the ComfyUI installation
      - **Models:** Note that most models are a *bag of models*, this is four models working together.
 
+
+## &#x0001F5BC;&#xFE0F; Examples
+
+Once installed the examples are available in the ComfyUI workflow templates, in the *audio-separation* section.
+
+- [00_Vocals.json](example_workflows/00_Vocals.json): Example to get vocals using MDX
+- [01_Vocals_Drums_Bass.json](example_workflows/01_Vocals_Drums_Bass.json): Example to get vocals, drums, bass and others using MDX
+- [02_Batch.json](example_workflows/02_Batch.json): Shows how to apply MDX demix to a batch of audios, using *Audio Batch* nodes.
+- [03_Instrumental_keep.json](example_workflows/03_Instrumental_keep.json): Shows how to extract vocals maintaining the same number of channels and sample rate, using *Audio Batch* nodes.
+- [04_Demucs.json](example_workflows/04_Demucs.json): Separates vocals, drums, bass and others using Demucs, better quality.
+- [05_Demix_and_Remix.json](example_workflows/05_Demix_and_Remix.json): Example to separate vocals and others to the left channel and drums and bass to the right channel, using *Audio Batch* nodes.
 
 ## &#x0001F4DD; Usage Notes
 
