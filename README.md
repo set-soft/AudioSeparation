@@ -30,12 +30,19 @@ to keep the secondary vocals along with the instruments.
 
 The objectives for these nodes are:
 
-- Multiple stems (Vocals, Instruments, Drums, Bass, etc.)
-- Easy of use
-- Clear download (with progress and known destination)
-- Support for all possible input audio formats (mono/stereo, any sample rate, any batch size)
-- Good quality vs size, or you can choose better quality using Demucs
-- Reduced dependencies
+&#x2705; Multiple stems (Vocals, Instruments, Drums, Bass, etc.)
+
+&#x2705; Easy of use
+
+&#x2705; Clear download (with progress and known destination)
+
+&#x2705; Support for all possible input audio formats (mono/stereo, any sample rate, any batch size)
+
+&#x2705; Good quality vs size, or you can choose better quality using Demucs
+
+&#x2705; Reduced dependencies, no need to install extra Python modules when using ComfyUI
+
+&#x2705; Multiple examples
 
 ---
 
@@ -55,6 +62,7 @@ The objectives for these nodes are:
     *   [Demucs Audio Separator](#demucs-audio-separator)
 *   &#x0001F5BC;&#xFE0F; [Examples](#&#xFE0F;-examples)
 *   &#x0001F4DD; [Usage Notes](#-usage-notes)
+*   &#x0001F4DC; [Project History](#-project-history)
 *   &#x2696;&#xFE0F; [License](#&#xFE0F;-license)
 *   &#x0001F64F; [Attributions](#-attributions)
 
@@ -258,12 +266,13 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 Note that we have two versions, the regular and the *quick* version. The *quick* version is ideal for quick tests, the input files
 are downloaded and, in most cases, only 10 seconds of audio are processed.
 
-- [00_Vocals_simple.json](example_workflows/00_Vocals_simple.json) [Quick](example_workflows/00_Vocals_quick.json): Example to get vocals using MDX
-- [01_Vocals_Drums_Bass.json](example_workflows/01_Vocals_Drums_Bass.json) [Quick](example_workflows/01_Vocals_Drums_Bass_quick.json): Example to get vocals, drums, bass and others using MDX
-- [02_Batch.json](example_workflows/02_Batch.json) [Quick](example_workflows/02_Batch_quick.json): Shows how to apply MDX demix to a batch of audios, using *Audio Batch* nodes.
-- [03_Instrumental_keep.json](example_workflows/03_Instrumental_keep.json) [Quick](example_workflows/03_Instrumental_keep_quick.json): Shows how to extract vocals maintaining the same number of channels and sample rate, using *Audio Batch* nodes.
-- [04_Demucs.json](example_workflows/04_Demucs.json) [Quick](example_workflows/04_Demucs_quick.json): Separates vocals, drums, bass and others using Demucs, better quality.
-- [05_Demix_and_Remix.json](example_workflows/05_Demix_and_Remix.json) [Quick](example_workflows/05_Demix_and_Remix_quick.json): Example to separate vocals and others to the left channel and drums and bass to the right channel, using *Audio Batch* nodes.
+- [00_Vocals_simple.json](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/00_Vocals_simple.json) [Quick](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/00_Vocals_quick.json): Example to get vocals using MDX
+- [01_Vocals_Drums_Bass.json](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/01_Vocals_Drums_Bass.json) [Quick](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/01_Vocals_Drums_Bass_quick.json): Example to get vocals, drums, bass and others using MDX
+- [02_Batch.json](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/02_Batch.json) [Quick](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/02_Batch_quick.json): Shows how to apply MDX demix to a batch of audios, using *Audio Batch* nodes.
+- [03_Instrumental_keep.json](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/03_Instrumental_keep.json) [Quick](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/03_Instrumental_keep_quick.json): Shows how to extract vocals maintaining the same number of channels and sample rate, using *Audio Batch* nodes.
+- [04_Demucs.json](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/04_Demucs.json) [Quick](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/04_Demucs_quick.json): Separates vocals, drums, bass and others using Demucs, better quality.
+- [05_Demix_and_Remix.json](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/05_Demix_and_Remix.json) [Quick](https://raw.githubusercontent.com/set-soft/AudioSeparation/refs/heads/main/example_workflows/05_Demix_and_Remix_quick.json): Example to separate vocals and others to the left channel and drums and bass to the right channel, using *Audio Batch* nodes.
+
 
 ## &#x0001F4DD; Usage Notes
 
@@ -276,6 +285,15 @@ are downloaded and, in most cases, only 10 seconds of audio are processed.
   You can force debugging level for these nodes defining the `AUDIOSEPARATION_NODES_DEBUG` environment variable to `1`.
 - **Models format:** We use safetensors because this format is safer than PyTorch files (.pth, .th, etc.) and doesn't need an extra runtime (like ONNX does)
 - **No quantized Demucs:** These models just save download time, but pulls extra dependency (diffq), they are just lower quality versions of their non-quantized counterparts.
+
+
+## &#x0001F4DC; Project History
+
+- 1.0.0 2025-07-02: Initial release. MDX-Net models support
+
+- 1.1.0 2025-07-11: Demucs models support
+
+- 1.1.1 2025-07-21: More examples. One more Demucs model
 
 
 ## &#x2696;&#xFE0F; License
