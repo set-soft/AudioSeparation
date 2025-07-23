@@ -3,6 +3,7 @@ torchaudio
 numpy
 safetensors
 tqdm
+seconohe
 # Optionals:
 # requests
 # colorama
