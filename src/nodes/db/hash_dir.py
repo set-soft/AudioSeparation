@@ -10,11 +10,11 @@
 import os
 import csv
 import logging
+from seconohe.logger import debugl
 import sys
 
 from .hash import get_hash
 from .. import NODES_NAME
-from ..utils.misc import debugl
 
 # Set up the logger as specified
 logger = logging.getLogger(f"{NODES_NAME}.hash_dir")

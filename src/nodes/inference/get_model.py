@@ -8,9 +8,10 @@ import importlib
 import json
 import logging
 from safetensors import safe_open
+from seconohe.logger import get_debug_level
 from .MDX_Net import MDX_Net
 from .. import NODES_NAME
-from ..utils.misc import json_object_hook, get_debug_level
+from ..utils.misc import json_object_hook
 # Demucs class imports
 from .demucs_api import BagOfModels
 from .demucs_log_helper import DemucsModelInfo

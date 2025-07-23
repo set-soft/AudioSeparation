@@ -14,6 +14,7 @@ import argparse
 import json
 from pathlib import Path
 from safetensors.torch import save_file
+from seconohe.logger import debugl
 import sys
 import torch
 from typing import Dict
@@ -26,7 +27,7 @@ try:
 except Exception:
     with_demuc_lib = False
 import bootstrap  # noqa: F401
-from source.utils.misc import cli_add_verbose, FractionEncoder, debugl
+from source.utils.misc import cli_add_verbose, FractionEncoder
 from source.utils.logger import main_logger, logger_set_standalone
 from source.db.models_db import cli_add_db, get_download_url, ModelsDB
 from source.db.hash import get_hash

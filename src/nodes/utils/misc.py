@@ -4,16 +4,6 @@
 # Project: ComfyUI-AudioSeparation
 from fractions import Fraction
 import json
-import logging
-
-
-def get_debug_level(logger):
-    return logging.DEBUG - logger.getEffectiveLevel() + 1
-
-
-def debugl(logger, level, msg):
-    if get_debug_level(logger) >= level:
-        logger.debug(msg)
 
 
 def cli_add_verbose(parser):
