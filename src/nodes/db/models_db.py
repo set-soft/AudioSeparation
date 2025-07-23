@@ -9,9 +9,8 @@ import json
 import logging
 import os
 from pathlib import Path
-from ..utils.misc import NODES_NAME
-from ..utils.downloader import download_model as download_model_basic
-from ..utils.comfy_notification import send_toast_notification
+from seconohe.downloader import download_file as download_model_basic
+from .. import NODES_NAME
 from .hash_dir import hash_dir
 from .hash import is_hash, get_hash
 
@@ -33,7 +32,7 @@ def get_db_filename(provided=None):
     script_dir = Path(__file__).resolve().parent
 
     # Build the path to the JSON file: go up one level, then into models/
-    json_path = script_dir / ".." / ".." / "models" / "uvr_model_data.json"
+    json_path = script_dir / ".." / ".." / ".." / "models" / "uvr_model_data.json"
     try:
         return json_path.resolve().relative_to(Path.cwd())
     except ValueError:
@@ -273,15 +272,13 @@ def download_model(data, models_dir):
 
     # Download the file
     name = data['name']
-    send_toast_notification(f"Downloading `{name}`", "Download")
     try:
-        fname = download_model_basic(url, models_dir, name)
+        fname = download_model_basic(logger, url, models_dir, name)
         # Mark it as downloaded
         data['model_path'] = fname
         if data['indicator']:
             data['indicator'] = ICON_DOWNLOADED
         # Notify the user
-        send_toast_notification("Finished downloading", "Download", 'success')
         return fname
     except Exception as e:
         raise ValueError(f"Failed to download {name} from {url}\n{e}")

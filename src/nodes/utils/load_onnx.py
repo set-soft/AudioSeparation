@@ -11,7 +11,7 @@ try:
     with_onnx = True
 except Exception:
     with_onnx = False
-from .misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.load_onnx")
 

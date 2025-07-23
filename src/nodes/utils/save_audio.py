@@ -8,7 +8,7 @@
 import logging
 import os
 import torchaudio
-from .misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.save_audio")
 

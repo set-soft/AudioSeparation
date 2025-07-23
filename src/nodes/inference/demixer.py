@@ -17,7 +17,7 @@ except Exception:
 # Local imports
 from .stft import stft_chunk_process, stft_get_chunks
 from ..db.load_model import load_model
-from ..utils.misc import NODES_NAME
+from .. import NODES_NAME
 from ..utils.torch import model_to_target, get_offload_device
 from .demucs_api import apply_model, BagOfModels
 

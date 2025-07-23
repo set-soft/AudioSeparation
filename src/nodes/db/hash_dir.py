@@ -13,7 +13,8 @@ import logging
 import sys
 
 from .hash import get_hash
-from ..utils.misc import NODES_NAME, debugl
+from .. import NODES_NAME
+from ..utils.misc import debugl
 
 # Set up the logger as specified
 logger = logging.getLogger(f"{NODES_NAME}.hash_dir")

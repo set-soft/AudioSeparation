@@ -1,6 +1,6 @@
 from fractions import Fraction
 import logging
-from ..utils.misc import NODES_NAME
+from .. import NODES_NAME
 
 rlogger = logging.getLogger(f"{NODES_NAME}.demucs_log")
 

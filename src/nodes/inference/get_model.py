@@ -9,7 +9,8 @@ import json
 import logging
 from safetensors import safe_open
 from .MDX_Net import MDX_Net
-from ..utils.misc import NODES_NAME, json_object_hook, get_debug_level
+from .. import NODES_NAME
+from ..utils.misc import json_object_hook, get_debug_level
 # Demucs class imports
 from .demucs_api import BagOfModels
 from .demucs_log_helper import DemucsModelInfo

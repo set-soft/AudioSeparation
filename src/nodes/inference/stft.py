@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from tqdm import tqdm
 # Local imports
-from ..utils.misc import NODES_NAME
+from .. import NODES_NAME
 from ..utils.torch import model_to_target
 
 logger = logging.getLogger(f"{NODES_NAME}.stft")

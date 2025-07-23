@@ -4,15 +4,16 @@
 # Project: ComfyUI-AudioSeparation
 import os
 from typing import Dict
+from seconohe.comfy_node_action import send_node_action
 # ComfyUI imports
 import folder_paths  # ComfyUI's way to access model paths
 # Local imports
-from .source.utils.logger import main_logger
-from .source.utils.load_audio import audio_get_channels, force_stereo, force_sample_rate
-from .source.utils.torch import get_torch_device_options, get_canonical_device
-from .source.utils.comfy_node_action import send_node_action
-from .source.db.models_db import ModelsDB
-from .source.inference.demixer import get_demixer
+# We are the main source, so we use the main_logger
+from . import main_logger
+from .utils.load_audio import audio_get_channels, force_stereo, force_sample_rate
+from .utils.torch import get_torch_device_options, get_canonical_device
+from .db.models_db import ModelsDB
+from .inference.demixer import get_demixer
 
 DEF_MODEL = 'Kim_Vocal_2.safetensors'
 DEF_ENTRY = 'Default'
@@ -94,7 +95,7 @@ class AudioSeparateVocals:
         # Handle a change in the icon of the model name
         if model_path is None:
             # Was downloaded
-            send_node_action("change_widget", "model", model_data['indicator'] + model_data['filtered_name'])
+            send_node_action(logger, "change_widget", "model", model_data['indicator'] + model_data['filtered_name'])
 
         # Match channels and S/R
         waveform = input_sound['waveform']
@@ -220,7 +221,7 @@ class AudioSeparateDemucs(AudioSeparateVocals):
         # Handle a change in the icon of the model name
         if model_path is None:
             # Was downloaded
-            send_node_action("change_widget", "model", model_data['indicator'] + model_data['filtered_name'])
+            send_node_action(logger, "change_widget", "model", model_data['indicator'] + model_data['filtered_name'])
 
         # Match channels and S/R
         waveform = input_sound['waveform']

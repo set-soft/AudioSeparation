@@ -9,7 +9,7 @@ import logging
 # Local imports
 from .models_db import download_model
 from ..inference.get_model import get_model
-from ..utils.misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.load_model")
 

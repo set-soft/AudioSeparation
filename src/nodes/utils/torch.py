@@ -11,7 +11,7 @@ try:
     with_comfy = True
 except Exception:
     with_comfy = False
-from .misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.torch")
 

@@ -7,7 +7,7 @@
 # Original code from Gemini 2.5 Pro
 import logging
 from safetensors.torch import load_file
-from .misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.load_safetensors")
 

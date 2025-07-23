@@ -6,9 +6,6 @@ from fractions import Fraction
 import json
 import logging
 
-NODES_NAME = "AudioSeparation"
-NODES_DEBUG_VAR = NODES_NAME.upper() + "_NODES_DEBUG"
-
 
 def get_debug_level(logger):
     return logging.DEBUG - logger.getEffectiveLevel() + 1

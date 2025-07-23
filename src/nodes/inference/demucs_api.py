@@ -25,9 +25,9 @@ from .HTDemucs import HTDemucs
 from .demucs_code import center_trim, DummyPoolExecutor
 # AudioSeparation stuff
 import logging
-from ..utils.misc import NODES_NAME
+from .. import NODES_NAME
 
-logger = logging.getLogger(f"{NODES_NAME}.demixer")
+logger = logging.getLogger(f"{NODES_NAME}.demucs_api")
 Model = tp.Union[Demucs, HDemucs, HTDemucs]
 
 

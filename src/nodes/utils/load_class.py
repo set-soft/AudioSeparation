@@ -8,7 +8,7 @@ import importlib
 import logging
 import os
 import sys
-from .misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.load_class")
 
