@@ -6,6 +6,7 @@
 # Wrappers for the model and inference
 import logging
 import math
+from seconohe.torch import model_to_target, get_offload_device
 import torch
 import tqdm
 # ComfyUI imports
@@ -18,7 +19,6 @@ except Exception:
 from .stft import stft_chunk_process, stft_get_chunks
 from ..db.load_model import load_model
 from .. import NODES_NAME
-from ..utils.torch import model_to_target, get_offload_device
 from .demucs_api import apply_model, BagOfModels
 
 from torchaudio.transforms import Fade
@@ -259,7 +259,7 @@ class DemixerDemucs(DemixerGeneric):
                 # Using their example they aren't produced
                 model.target_device = self.device
                 logger.debug("Using PyTorch Audio chunking for old model")
-                with model_to_target(model):
+                with model_to_target(logger, model):
                     separated_tensors = separate_sources(
                         model,
                         input_tensor_on_device,
@@ -273,7 +273,7 @@ class DemixerDemucs(DemixerGeneric):
                 if with_comfy:
                     comfy_progress_bar = comfy.utils.ProgressBar(self.get_steps(waveform_tensor, forced_segment, shifts,
                                                                                 overlap))
-                with model_to_target(model):
+                with model_to_target(logger, model):
                     separated_tensors = apply_model(
                         model,
                         input_tensor_on_device,

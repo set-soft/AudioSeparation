@@ -5,13 +5,13 @@
 import os
 from typing import Dict
 from seconohe.comfy_node_action import send_node_action
+from seconohe.torch import get_torch_device_options, get_canonical_device
 # ComfyUI imports
 import folder_paths  # ComfyUI's way to access model paths
 # Local imports
 # We are the main source, so we use the main_logger
 from . import main_logger
 from .utils.load_audio import audio_get_channels, force_stereo, force_sample_rate
-from .utils.torch import get_torch_device_options, get_canonical_device
 from .db.models_db import ModelsDB
 from .inference.demixer import get_demixer
 
