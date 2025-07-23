@@ -13,16 +13,17 @@ import json
 import numpy as np
 import onnx
 import os
+from safetensors.torch import save_file
+from seconohe.logger import logger_set_standalone
 import sys
 import torch
 from torch import nn
 # Local imports
 import bootstrap  # noqa: F401
-from safetensors.torch import save_file
-from source.utils.load_class import import_model_class
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.misc import cli_add_verbose
-from source.db.models_db import get_download_url
+from src.nodes import main_logger
+from src.nodes.utils.load_class import import_model_class
+from src.nodes.utils.misc import cli_add_verbose
+from src.nodes.db.models_db import get_download_url
 
 
 class OnnxGraph:
@@ -227,7 +228,7 @@ if __name__ == "__main__":
     cli_add_verbose(parser)
 
     args = parser.parse_args()
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     if args.metadata is not None:
         try:
             args.metadata = json.loads(args.metadata)

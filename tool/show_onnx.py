@@ -11,11 +11,12 @@ import numpy as np
 import onnx
 from onnx import shape_inference  # Import the shape inference module
 import torch
+from seconohe.logger import logger_set_standalone
 import sys
 # Local imports
 import bootstrap  # noqa: F401
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.misc import cli_add_verbose
+from src.nodes import main_logger
+from src.nodes.utils.misc import cli_add_verbose
 
 
 def print_onnx_nodes_and_weights(onnx_model_path):
@@ -205,7 +206,7 @@ if __name__ == "__main__":
     cli_add_verbose(parser)
 
     args = parser.parse_args()
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     if args.run and not args.no_show:
         main_logger.error("-r can't be used when -S is specified")
         sys.exit(1)

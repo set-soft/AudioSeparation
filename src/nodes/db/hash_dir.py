@@ -133,7 +133,7 @@ def hash_dir(directory_path: str) -> dict:
 
 # ==============================================================================
 # Command-Line Tool for Testing and Operation
-# python -m source.db.hash_dir
+# python -m src.nodes.db.hash_dir
 # ==============================================================================
 if __name__ == "__main__":
     # Local imports to avoid top-level pollution

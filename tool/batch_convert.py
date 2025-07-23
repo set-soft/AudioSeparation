@@ -12,14 +12,15 @@ import argparse
 import json
 import os
 import re
+from seconohe.logger import logger_set_standalone
 import subprocess
 import sys
 # Local imports
 import bootstrap  # noqa: F401
-from source.db.hash import get_hash
-from source.db.models_db import load_known_models, save_known_models, get_db_filename
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.misc import cli_add_verbose
+from src.nodes import main_logger
+from src.nodes.db.hash import get_hash
+from src.nodes.db.models_db import load_known_models, save_known_models, get_db_filename
+from src.nodes.utils.misc import cli_add_verbose
 
 
 def parse_converter_output(output):
@@ -38,7 +39,7 @@ def parse_converter_output(output):
 
 
 def main(args):
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     # 1. Load the JSON metadata file
     model_db = load_known_models(args.json_file)
     if model_db is None:

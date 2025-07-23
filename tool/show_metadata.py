@@ -9,12 +9,13 @@
 import argparse
 import json
 from pprint import pprint
+from seconohe.logger import logger_set_standalone
 # Local imports
 import bootstrap  # noqa: F401
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.misc import cli_add_verbose, json_object_hook
-from source.inference.get_model import get_metadata
-from source.inference.demucs_log_helper import DemucsModelInfo
+from src.nodes import main_logger
+from src.nodes.utils.misc import cli_add_verbose, json_object_hook
+from src.nodes.inference.get_model import get_metadata
+from src.nodes.inference.demucs_log_helper import DemucsModelInfo
 
 
 def show_metadata(args):
@@ -47,5 +48,5 @@ if __name__ == "__main__":
     cli_add_verbose(parser)
 
     args = parser.parse_args()
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     show_metadata(args)

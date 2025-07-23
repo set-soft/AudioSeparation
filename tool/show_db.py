@@ -9,13 +9,14 @@
 # Run it using: python tool/show_db.py
 import argparse
 import pprint
+from seconohe.logger import logger_set_standalone
 import sys
 # Local imports
 import bootstrap  # noqa: F401
-from source.db.hash_dir import hash_dir
-from source.db.models_db import load_known_models, cli_add_models_and_db, save_known_models, get_models
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.misc import cli_add_verbose
+from src.nodes import main_logger
+from src.nodes.db.hash_dir import hash_dir
+from src.nodes.db.models_db import load_known_models, cli_add_models_and_db, save_known_models, get_models
+from src.nodes.utils.misc import cli_add_verbose
 
 
 # Do nothing, you can apply some change here
@@ -64,7 +65,7 @@ def apply_process(model_db):
 
 
 def main(args):
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     # 1. Load the JSON metadata file
     model_db = load_known_models(args.json_file)
     if model_db is None:

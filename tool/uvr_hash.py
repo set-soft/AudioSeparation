@@ -8,10 +8,11 @@
 # python tool/uvr_hash.py model.onnx
 import argparse
 import os
+from seconohe.logger import logger_set_standalone
 # Local imports
 import bootstrap  # noqa: F401
-from source.utils.logger import main_logger, logger_set_standalone
-from source.db.hash import get_hash
+from src.nodes import main_logger
+from src.nodes.db.hash import get_hash
 
 
 def main():
@@ -36,7 +37,7 @@ def main():
 
     args = parser.parse_args()
     args.verbose = 0
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
 
     # Process each file provided on the command line
     for filepath in args.files:

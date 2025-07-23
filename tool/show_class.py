@@ -7,13 +7,14 @@
 # Tool to show PyTorch class i.e:
 # python tool/show_class.py -m source/inference/MDX_Net.py:MDX_Net
 import argparse
+from seconohe.logger import logger_set_standalone
 import sys
 from torch import nn
 # Local imports
 import bootstrap  # noqa: F401
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.load_class import import_model_class
-from source.utils.misc import cli_add_verbose
+from src.nodes import main_logger
+from src.nodes.utils.load_class import import_model_class
+from src.nodes.utils.misc import cli_add_verbose
 
 
 def load_class(args):
@@ -131,7 +132,7 @@ if __name__ == "__main__":
     parser.add_argument('-S', '--no_show', action='store_false', help="Don't print the structure.")
 
     args = parser.parse_args()
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     model = load_class(args)
     if args.no_show:
         show(model)

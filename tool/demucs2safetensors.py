@@ -14,7 +14,7 @@ import argparse
 import json
 from pathlib import Path
 from safetensors.torch import save_file
-from seconohe.logger import debugl
+from seconohe.logger import debugl, logger_set_standalone
 import sys
 import torch
 from typing import Dict
@@ -27,13 +27,13 @@ try:
 except Exception:
     with_demuc_lib = False
 import bootstrap  # noqa: F401
-from source.utils.misc import cli_add_verbose, FractionEncoder
-from source.utils.logger import main_logger, logger_set_standalone
-from source.db.models_db import cli_add_db, get_download_url, ModelsDB
-from source.db.hash import get_hash
-import source.inference.Demucs as local_demucs_module
-import source.inference.HDemucs as local_hdemucs_module
-import source.inference.HTDemucs as local_htdemucs_module
+from src.nodes import main_logger
+from src.nodes.utils.misc import cli_add_verbose, FractionEncoder
+from src.nodes.db.models_db import cli_add_db, get_download_url, ModelsDB
+from src.nodes.db.hash import get_hash
+import src.nodes.inference.Demucs as local_demucs_module
+import src.nodes.inference.HDemucs as local_hdemucs_module
+import src.nodes.inference.HTDemucs as local_htdemucs_module
 MODULES_MAP = {'demucs': local_demucs_module,
                'demucs.demucs': local_demucs_module,
                'demucs.hdemucs': local_hdemucs_module,
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     cli_add_verbose(parser)
 
     args = parser.parse_args()
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     main_logger.info("⚙️  PyTorch Demucs to Safetensors converter\n")
 
     # Get information about the YAML file in our database
