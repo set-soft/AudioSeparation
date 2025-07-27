@@ -40,7 +40,7 @@ The objectives for these nodes are:
 
 &#x2705; Good quality vs size, or you can choose better quality using Demucs
 
-&#x2705; Reduced dependencies, no need to install extra Python modules when using ComfyUI
+&#x2705; Reduced dependencies, just my helpers when using ComfyUI
 
 &#x2705; Multiple examples
 
@@ -80,10 +80,11 @@ or just do it manually:
     cd ComfyUI/custom_nodes/
     git clone https://github.com/set-soft/AudioSeparation
     ```
-2.  Restart ComfyUI.
+2.  Install SeCoNoHe: `pip install seconohe`
+3.  Restart ComfyUI.
 
 The nodes should then appear under the "audio/separation" category in the "Add Node" menu.
-You don't need to install extra dependencies.
+SeCoNoHe are just a bunch of helpers I created with common functionality I use in my nodes.
 
 ### Command Line Tool
 
@@ -106,13 +107,7 @@ pip install -r requirements.txt
 4. Run the scripts like this:
 
 ```
-python3 tool/demix.py AUDIO_FILE
-````
-
-or
-
-```
-python tool/demix.py AUDIO_FILE
+tool/demix.py AUDIO_FILE
 ````
 
 You don't need to install it, you could even add a symlink in `/usr/bin`.

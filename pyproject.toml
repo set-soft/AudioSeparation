@@ -5,13 +5,23 @@ Audio separation (aka demixing) nodes, for Vocals, Instruments, Bass, Drums and 
 Using MDX-Net and Demucs, no extra dependencies, support for batch and resample.
 Choose between High Quality and Speed. All safetensor models (No ONNX, No PyTorch)
 """
+# Inconsistent mechanism needed by comfy-cli, no dynamic variables
 version = "1.1.1"
+# Deprecated mechanism, comfy-cli doesn't support SPDX
 license = { file = "LICENSE" }
-dependencies = []
+# Not really used, ComfyUI-Manager doesn't use it
+# dependencies = ["seconohe>=1.0.2"]
+# So we do it in the reverse way ...
+dynamic = ["dependencies"]
 
 [project.urls]
 Repository = "https://github.com/set-soft/AudioSeparation"
 
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
 [tool.comfy]
 PublisherId = "set-soft"
 DisplayName = "Audio Separation (Demix)"
+Icon = "https://raw.githubusercontent.com/set-soft/AudioSeparation/main/assets/AudioSeparation_400.jpg"
+Banner = "https://raw.githubusercontent.com/set-soft/AudioSeparation/main/assets/audioseparation_logo_21_9.jpg"
