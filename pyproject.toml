@@ -6,7 +6,7 @@ Using MDX-Net and Demucs, no extra dependencies, support for batch and resample.
 Choose between High Quality and Speed. All safetensor models (No ONNX, No PyTorch)
 """
 # Inconsistent mechanism needed by comfy-cli, no dynamic variables
-version = "1.1.1"
+version = "1.1.2"
 # Deprecated mechanism, comfy-cli doesn't support SPDX
 license = { file = "LICENSE" }
 # Not really used, ComfyUI-Manager doesn't use it

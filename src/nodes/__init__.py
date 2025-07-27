@@ -5,7 +5,7 @@
 from seconohe.logger import initialize_logger
 
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __copyright__ = "Copyright © 2025 Salvador E. Tropea / Instituto Nacional de Tecnología Industrial"
 __license__ = "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>"
 __author__ = "Salvador E. Tropea"
