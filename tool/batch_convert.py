@@ -20,7 +20,7 @@ import bootstrap  # noqa: F401
 from src.nodes import main_logger
 from src.nodes.db.hash import get_hash
 from src.nodes.db.models_db import load_known_models, save_known_models, get_db_filename
-from src.nodes.utils.misc import cli_add_verbose
+from src.nodes.utils.misc import cli_add_verbose, cli_add_version
 
 
 def parse_converter_output(output):
@@ -202,6 +202,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_location', type=str, default='source/inference/MDX_Net.py:MDX_Net',
                         help="Python path to the model class.")
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     main(args)

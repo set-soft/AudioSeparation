@@ -8,16 +8,17 @@
 # Run it using: python tool/demix.py -m HASH AUDIO
 import argparse
 import os
+from seconohe.logger import logger_set_standalone
+from seconohe.torch import get_torch_device_options, get_canonical_device
 import sys
 # Local imports
 import bootstrap  # noqa: F401
-from source.db.models_db import ModelsDB, cli_add_models_and_db
-from source.inference.demixer import get_demixer
-from source.utils.load_audio import load_audio
-from source.utils.logger import main_logger, logger_set_standalone
-from source.utils.misc import cli_add_verbose
-from source.utils.save_audio import save_audio
-from source.utils.torch import get_torch_device_options, get_canonical_device
+from src.nodes import main_logger
+from src.nodes.db.models_db import ModelsDB, cli_add_models_and_db
+from src.nodes.inference.demixer import get_demixer
+from src.nodes.utils.load_audio import load_audio
+from src.nodes.utils.misc import cli_add_verbose, cli_add_version
+from src.nodes.utils.save_audio import save_audio
 
 BANNER = "🎵 MDX-Net Audio Separation Tool 🎵"
 
@@ -85,10 +86,11 @@ if __name__ == "__main__":
                         help="How many audio segments to process at once. 0 uses the value from the model")
     parser.add_argument('-l', '--list', action='store_true', help="Show available models")
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     parser.set_defaults(save_main=True)
     args = parser.parse_args()
-    logger_set_standalone(args)
+    logger_set_standalone(main_logger, args)
     main_logger.info(BANNER)
 
     # Sanity check

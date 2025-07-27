@@ -16,7 +16,7 @@ import sys
 # Local imports
 import bootstrap  # noqa: F401
 from src.nodes import main_logger
-from src.nodes.utils.misc import cli_add_verbose
+from src.nodes.utils.misc import cli_add_verbose, cli_add_version
 
 
 def print_onnx_nodes_and_weights(onnx_model_path):
@@ -204,6 +204,7 @@ if __name__ == "__main__":
                         "Incompatible with -S")
     parser.add_argument('-S', '--no_show', action='store_false', help="Don't print the ONNX structure.")
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     logger_set_standalone(main_logger, args)

@@ -16,7 +16,7 @@ import bootstrap  # noqa: F401
 from src.nodes import main_logger
 from src.nodes.db.hash_dir import hash_dir
 from src.nodes.db.models_db import load_known_models, cli_add_models_and_db, save_known_models, get_models
-from src.nodes.utils.misc import cli_add_verbose
+from src.nodes.utils.misc import cli_add_verbose, cli_add_version
 
 
 # Do nothing, you can apply some change here
@@ -130,6 +130,7 @@ if __name__ == "__main__":
 
     # --- Control Arguments ---
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     main(args)

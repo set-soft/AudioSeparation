@@ -14,7 +14,7 @@ from torch import nn
 import bootstrap  # noqa: F401
 from src.nodes import main_logger
 from src.nodes.utils.load_class import import_model_class
-from src.nodes.utils.misc import cli_add_verbose
+from src.nodes.utils.misc import cli_add_verbose, cli_add_version
 
 
 def load_class(args):
@@ -123,13 +123,14 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--num_stages', type=int, default=5,
                         choices=[2, 3, 4, 5, 6, 7],  # Restrict to known valid values
                         help="The number of U-Net stages in the model. (choices: 2 to 7, default: 5)")
-    cli_add_verbose(parser)
     parser.add_argument('-o', '--export_onnx', type=str, default=None,
                         help="Path for the optional output .onnx file.\n"
                         "Only the structure is exported")
     parser.add_argument('-k', '--keys', action='store_true', help="Print the keys for the state_dict.")
     parser.add_argument('-C', '--compact', action='store_true', help="Print a compact representation.")
     parser.add_argument('-S', '--no_show', action='store_false', help="Don't print the structure.")
+    cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     logger_set_standalone(main_logger, args)

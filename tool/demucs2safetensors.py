@@ -28,7 +28,7 @@ except Exception:
     with_demuc_lib = False
 import bootstrap  # noqa: F401
 from src.nodes import main_logger
-from src.nodes.utils.misc import cli_add_verbose, FractionEncoder
+from src.nodes.utils.misc import cli_add_verbose, FractionEncoder, cli_add_version
 from src.nodes.db.models_db import cli_add_db, get_download_url, ModelsDB
 from src.nodes.db.hash import get_hash
 import src.nodes.inference.Demucs as local_demucs_module
@@ -212,6 +212,7 @@ if __name__ == '__main__':
                         "it's saved next to the YAML with the same name.")
     cli_add_db(parser)
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     logger_set_standalone(main_logger, args)

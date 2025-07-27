@@ -22,7 +22,7 @@ from torch import nn
 import bootstrap  # noqa: F401
 from src.nodes import main_logger
 from src.nodes.utils.load_class import import_model_class
-from src.nodes.utils.misc import cli_add_verbose
+from src.nodes.utils.misc import cli_add_verbose, cli_add_version
 from src.nodes.db.models_db import get_download_url
 
 
@@ -226,6 +226,7 @@ if __name__ == "__main__":
                         "(default: source/inference/MDX_Net.py:MDX_Net)")
     parser.add_argument('-j', '--metadata', type=str, help="Metadata to include in the hyperparameters, JSON format")
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     logger_set_standalone(main_logger, args)

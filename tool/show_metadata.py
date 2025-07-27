@@ -13,7 +13,7 @@ from seconohe.logger import logger_set_standalone
 # Local imports
 import bootstrap  # noqa: F401
 from src.nodes import main_logger
-from src.nodes.utils.misc import cli_add_verbose, json_object_hook
+from src.nodes.utils.misc import cli_add_verbose, json_object_hook, cli_add_version
 from src.nodes.inference.get_model import get_metadata
 from src.nodes.inference.demucs_log_helper import DemucsModelInfo
 
@@ -46,6 +46,7 @@ if __name__ == "__main__":
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('input_file', type=str, help="Path to the input safetensors model file.")
     cli_add_verbose(parser)
+    cli_add_version(parser, __name__)
 
     args = parser.parse_args()
     logger_set_standalone(main_logger, args)
