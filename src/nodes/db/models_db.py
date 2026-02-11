@@ -243,7 +243,7 @@ def get_download_url(data):
     except KeyError:
         return None
     try:
-        return os.path.join(KNOWN_SOURCES[dn_t], name)
+        return KNOWN_SOURCES[dn_t] + '/' + name
     except KeyError:
         logger.error(f"Unknown download source `{dn_t}`")
         return None
